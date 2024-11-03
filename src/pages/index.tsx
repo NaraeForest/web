@@ -1,6 +1,11 @@
+import Head from "@/components/header";
+
 export default function Home() {
   return (
-    <div>
-    </div>
+    <>
+      <div className="Title"> 
+        <Head />
+      </div>
+    </>
   );
 }
