@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function MainGoal({ name, progress }){
     return(
         <div className="goalCard bg-gray-100 p-4 rounded-lg shadow-md">
