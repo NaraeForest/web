@@ -1,4 +1,5 @@
-import SubGoal from "@/components/subGoal"
+import SubGoal from "@/components/SubGoal"
+import footer from "@/components/footer"
 
 export default function main(){
 
@@ -15,99 +16,29 @@ export default function main(){
 
     return (
         <>
-        <section className="mainGoal">
-            <div className="goalCard">
-                <h1>{mainGoalName}</h1>
-                <div className="progressBar">
-                    <div className = "progress" style={{width: `${mainGoalProgress}%`}}></div>
-                </div>
-                <p>{mainGoalProgress}% of goals completed</p>
+          <section className="mainGoal w-full mb-8 text-center">
+            <div className="goalCard bg-gray-100 p-4 rounded-lg shadow-md">
+              <h1 className="text-lg font-semibold mb-2">{mainGoalName}</h1>
+              <div className="progressBar w-full bg-gray-300 rounded-full h-2 mb-2">
+                <div
+                  className="progress bg-black h-2 rounded-full"
+                  style={{ width: `${mainGoalProgress}%` }}
+                ></div>
+              </div>
+              <p className="text-sm text-gray-600">{mainGoalProgress}% of goals completed</p>
             </div>
-
-        </section>
-
-        <section className="subGoal">
-            <h2>Sub Goals</h2>
+          </section>
+    
+          <section className="subGoal">
+            <h2 className="text-xl font-semibold mb-4 ml-2">Sub Goals</h2>
             {subGoals.map((goal, index) => (
-                <SubGoal key={index} name={goal.name} progress={goal.progress} />
+              <SubGoal key={index} name={goal.name} progress={goal.progress} />
             ))}
-        </section>
+          </section>
 
-        <div className="footercontainer">
-            <footer className="footer">
-                <button>Home</button>
-                <button>Feeds</button>
-                <button>Trends</button>
-                <button>Mypage</button>
-            </footer>
-        </div>
-
-
-        <style jsx>{`
-            .mainGoal {
-                width: 100%;
-                margin-bottom: 32px;
-                text-align = center;
-            }
-
-            .goalCard {
-                background-color: #f3f3f3;
-                padding: 16px;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-
-            .goalCard h1 {
-                font-size: 20px;
-                font-weight: 600;
-                margin-bottom: 8px;
-            }
-
-            .progressBar {
-                width: 100%;
-                background-color: #d1d5db;
-                border-radius: 4px;
-                height: 8px;
-                margin-bottom: 8px;
-            }       
-
-            .progress {
-                height: 8px;
-                background-color: #000;
-                border-radius: 4px;
-            }
-
-            p {
-                font-size: 14px;
-                color: #6b7280;
-            }
-
-            h2 {
-                font-size: 30px;
-                margin-left: 10px;
-                margin-bottom: 16px;
-            }
-
-            .footercontainer{
-                display: flex;
-                justify-content: center;
-            }
-
-            .footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                display: flex;
-                justify-content: space-around;
-                background-color: #fff;
-                padding: 12px 0;
-                box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            }
-
-            .footer button {
-                font-size: 16px;
-            }
-            `}</style>
+          <section className="footer">
+            <footer/>
+          </section>
         </>
-    )
+      );
 }
