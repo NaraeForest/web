@@ -9,7 +9,7 @@ export default function Head() {
                     <h1>Home</h1>
                 </div>
             </div>
-            <div id="blank">
+            <div id="blank">``
 
             </div>
             <div id="parent_add">
@@ -30,7 +30,7 @@ export default function Head() {
                     }
                     
                     .title_text{
-                        position: absolute;
+                        position: absolute;`
                         font-size: 3rem;
                         left: 50%;
                         top: 25%;
