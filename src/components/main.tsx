@@ -1,5 +1,4 @@
 import SubGoal from "@/components/SubGoal"
-import footer from "@/components/footer"
 
 export default function main(){
 
@@ -16,7 +15,7 @@ export default function main(){
 
     return (
         <>
-          <section className="mainGoal w-full mb-8 text-center">
+          <section className="mainGoal w-full mb-8">
             <div className="goalCard bg-gray-100 p-4 rounded-lg shadow-md">
               <h1 className="text-lg font-semibold mb-2">{mainGoalName}</h1>
               <div className="progressBar w-full bg-gray-300 rounded-full h-2 mb-2">
@@ -34,10 +33,6 @@ export default function main(){
             {subGoals.map((goal, index) => (
               <SubGoal key={index} name={goal.name} progress={goal.progress} />
             ))}
-          </section>
-
-          <section className="footer">
-            <footer/>
           </section>
         </>
       );
