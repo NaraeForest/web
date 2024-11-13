@@ -26,7 +26,7 @@ export default function Footer() {
         </button>
         <button
           className="flex flex-col items-center text-base"
-          onClick={() => router.push("/Trends")} // Trends로 이동 (가상)
+          onClick={() => router.push("/trends")} // Trends로 이동 (가상)
         >
           <span>
             <img src="/signal.svg" />
