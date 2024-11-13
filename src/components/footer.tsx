@@ -1,12 +1,24 @@
 export default function Footer() {
-    return(
-        <div className="footercontainer flex justify-center">
-        <footer className="footer fixed bottom-0 w-full flex justify-around bg-white py-3 shadow-md">
-        <button className="text-base">Home</button>
-        <button className="text-base">Feeds</button>
-        <button className="text-base">Trends</button>
-        <button className="text-base">MyPage</button>
-        </footer>
-    </div>
-    );
+    return (
+          <footer className="fixed bottom-0 left-0 w-full bg-white py-3 shadow-md">
+            <div className="flex justify-around">
+              <button className="flex flex-col items-center text-base">
+                <span><img src="/home.svg"/></span>
+                Home
+              </button>
+              <button className="flex flex-col items-center text-base">
+                <span><img src="/at-symbol.svg"/></span>
+                Feeds
+              </button>
+              <button className="flex flex-col items-center text-base">
+                <span><img src="/signal.svg"/></span>
+                Trends
+              </button>
+              <button className="flex flex-col items-center text-base">
+                <span><img src="/user.svg"/></span>
+                MyPage
+              </button>
+            </div>
+          </footer>
+      );
 }

@@ -1,24 +1,21 @@
-import Head from "@/components/header";
-import Main from "@/components/main";
+import HeadMain from "@/components/MainHeader";
+import Goal from "@/components/goal";
 import Footer from "@/components/footer";
-import { PlaneText } from "@/components/text";
 
 export default function Home() {
   return (
     <>
+    <div className="flex flex-col min-h-screen">
       <div className="Title"> 
-        <Head />
-        <PlaneText text={"hello"}>
-          <h2>asdf</h2>
-          tetes
-        </PlaneText>
+        <HeadMain />
       </div>
-      <div className="Body">
-        <Main />
+      <div className="Body flex-1 pb-16">
+        <Goal />
       </div>
       <div className="Footer">
         <Footer />
       </div>
+    </div>
     </>
   );
-}
+} 
