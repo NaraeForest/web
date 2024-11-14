@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { feedData } from "../data/Feeds";
-import Feed from "../components/Feed";
-import Footer from "../components/Footer";
+import { feedData } from "../data/feeds";
+import Feed from "../components/feed";
+import Footer from "../components/footer";
 
 const FeedHome: React.FC = () => {
   const router = useRouter();

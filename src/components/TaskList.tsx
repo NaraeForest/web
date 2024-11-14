@@ -13,9 +13,9 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({ onProgressChange }) => {
   // Task 타입을 사용하여 tasks의 타입을 명확히 정의합니다.
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, text: 'Create playbook file', completed: true },
-    { id: 2, text: 'Modify playbook file', completed: true },
-    { id: 3, text: 'Delete playbook file', completed: true },
+    { id: 1, text: 'Create playbook file', completed: false },
+    { id: 2, text: 'Modify playbook file', completed: false },
+    { id: 3, text: 'Delete playbook file', completed: false },
     { id: 4, text: 'Recreate playbook file', completed: false },
   ]);
 

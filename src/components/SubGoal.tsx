@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function SubGoal({ name, progress }) {
   return (
     <div className="subGoalCard bg-white p-4 rounded-lg shadow-md mb-4">

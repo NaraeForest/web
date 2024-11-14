@@ -21,7 +21,7 @@ const MainGoalViewer = () => {
         </button>
         <h1 className="text-xl font-bold">{goals.mainGoal}</h1>
         <button className="text-lg" onClick={handleEditClick}>
-          ✏️
+          <img src="/pencil.svg"></img>
         </button>
       </div>
 
