@@ -14,9 +14,9 @@ export default function LoginPage() {
       }
     })();
   }, []);
-  if (csrf == null) {
-    return (<div />);
-  }
+  // if (csrf == null) {
+  //   return (<div />);
+  // }
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm text-center">
