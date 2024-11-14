@@ -7,39 +7,29 @@ import Footer from "../components/Footer";
 const FeedHome: React.FC = () => {
   const router = useRouter();
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  const tagContainerRef = useRef<HTMLDivElement>(null);
 
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 상태
+  const [activeTags, setActiveTags] = useState<number[]>([]); // 활성화된 태그 ID들
   const dragThreshold = 5; // 클릭과 드래그를 구분하는 최소 거리
-  let clickTimeout: NodeJS.Timeout; // 클릭 이벤트 딜레이용 변수
+  let startX = 0;
+  let scrollLeft = 0;
 
-  const handleDrag = (event: React.MouseEvent | React.TouchEvent) => {
-    const container = feedContainerRef.current;
+  const handleTagDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    const container = tagContainerRef.current;
     if (!container) return;
 
-    let startY: number; // 드래그 시작 시 Y 좌표
-    let scrollTop: number; // 드래그 시작 시 스크롤 위치
-
-    const onMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-      e.preventDefault();
-      setIsDragging(false); // 드래그 상태 초기화
-      startY = "touches" in e ? e.touches[0].clientY : e.clientY;
-      scrollTop = container.scrollTop;
-
-      window.addEventListener("mousemove", onMouseMove);
-      window.addEventListener("touchmove", onMouseMove as any);
-      window.addEventListener("mouseup", onMouseUp);
-      window.addEventListener("touchend", onMouseUp);
-    };
+    setIsDragging(false); // 드래그 상태 초기화
+    startX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    scrollLeft = container.scrollLeft;
 
     const onMouseMove = (e: MouseEvent | TouchEvent) => {
-      const y = "touches" in e ? e.touches[0].clientY : e.clientY;
-      const walk = y - startY; // 드래그 이동 거리
-
+      const x = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const walk = x - startX; // 드래그 이동 거리
       if (Math.abs(walk) > dragThreshold) {
-        setIsDragging(true); // 드래그로 간주
+        setIsDragging(true);
+        container.scrollLeft = scrollLeft - walk; // 태그 스크롤 이동
       }
-
-      container.scrollTop = scrollTop - walk; // 스크롤 이동
     };
 
     const onMouseUp = () => {
@@ -47,15 +37,19 @@ const FeedHome: React.FC = () => {
       window.removeEventListener("touchmove", onMouseMove as any);
       window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("touchend", onMouseUp);
-
-      // 드래그가 아닌 경우 클릭 이벤트 처리
-      if (!isDragging) {
-        clearTimeout(clickTimeout); // 기존 타임아웃 초기화
-        clickTimeout = setTimeout(() => setIsDragging(false), 200); // 클릭 가능 딜레이
-      }
     };
 
-    onMouseDown(event);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("touchmove", onMouseMove as any);
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("touchend", onMouseUp);
+  };
+
+  const toggleTag = (id: number) => {
+    // 태그 활성화/비활성화
+    setActiveTags((prev) =>
+      prev.includes(id) ? prev.filter((tag) => tag !== id) : [...prev, id]
+    );
   };
 
   const handleFeedClick = (id: number) => {
@@ -72,11 +66,21 @@ const FeedHome: React.FC = () => {
         <h1 className="text-3xl font-bold py-4 pl-4">Feeds</h1>
 
         {/* 태그 버튼 영역 */}
-        <div className="overflow-hidden whitespace-nowrap px-4 pb-4 border-b cursor-grab">
+        <div
+          ref={tagContainerRef}
+          className="overflow-x-auto whitespace-nowrap px-4 pb-4 border-b cursor-grab scrollbar-hide"
+          onMouseDown={handleTagDragStart}
+          onTouchStart={handleTagDragStart}
+        >
           {Array.from({ length: 15 }, (_, index) => (
             <button
               key={index}
-              className="inline-block bg-gray-200 px-4 py-2 mr-2 rounded-full text-sm"
+              onClick={() => toggleTag(index)}
+              className={`inline-block px-4 py-2 mr-2 rounded-full text-sm transition-colors ${
+                activeTags.includes(index)
+                  ? "bg-black text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
             >
               {`Tag ${index + 1}`}
             </button>
@@ -88,8 +92,6 @@ const FeedHome: React.FC = () => {
       <div
         ref={feedContainerRef}
         className="flex-1 overflow-hidden px-4 pb-16 cursor-grab"
-        onMouseDown={handleDrag}
-        onTouchStart={handleDrag}
       >
         {feedData.map((feed) => (
           <div
