@@ -25,9 +25,9 @@ export default function SubGoalViewer() {
           <div className='flex-grow mr-3'>
             <SubGoal name={subGoalName} progress={subGoalProgress} />
           </div>
-          <Link href="/SubGoalEdit">
+          <Link href="/SubGoalViewer">
             <button className="text-gray-500 hover:text-black">
-              <img src="/pencil.svg"></img>
+              Save
             </button>
           </Link>
         </div>

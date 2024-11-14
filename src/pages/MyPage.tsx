@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import MainGoal from "@/components/MainGoal";
-import Footer from "@/components/Footer";
-import Feed from "@/components/Feed";
+import MainGoal from "@/components/mainGoal";
+import Footer from "@/components/footer";
+import Feed from "@/components/feed";
 
 export default function Home() {
   const goals = [
@@ -29,6 +29,13 @@ export default function Home() {
       userName: "WooWoo",
       time: "1 hour ago",
       content: "IPO의 힘 알아보고 공유가 사용되었습니다. 전세계 애플리케이션 구현 내내 적용을 안다 한다.",
+      likes: 15,
+      comments: 3,
+    },
+    {
+      userName: "WooWoo",
+      time: "1 hour ago",
+      content: "오늘 뭐해",
       likes: 15,
       comments: 3,
     },
@@ -61,14 +68,14 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-    {/* 상단 배경 */}
-    <div
-      className="h-40 bg-cover bg-center relative"
-      style={{
-        backgroundImage: `url(${backgroundImageExists ? "/background.jpg" : "/default-background.svg"})`,
-      }}
-    ></div>
+    <div className="flex flex-col h-screen overflow-hidden bg-gray-50">
+      {/* 상단 배경 */}
+      <div
+        className="h-40 bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${backgroundImageExists ? "/background.jpg" : "/default-background.svg"})`,
+        }}
+      ></div>
 
       {/* 프로필 섹션 */}
       <div className="relative px-4 mt-4 flex items-center justify-between">
@@ -102,6 +109,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 탭 선택 (Goals / Feeds) */}
       <div className="mt-6 border-b border-gray-300">
         <div className="flex justify-center">
           <button
@@ -123,10 +131,13 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="p-4 space-y-4">
+      {/* Goals / Feeds 콘텐츠 */}
+      <div className="flex-1 overflow-y-auto p-4 pb-16">
         {currentTab === "Goals" ? (
           goals.map((goal, index) => (
-            <MainGoal key={index} name={goal.name} progress={goal.progress} />
+            <div key={index} className="mb-4">
+              <MainGoal name={goal.name} progress={goal.progress} />
+            </div>
           ))
         ) : (
           feeds.map((feed, index) => (
@@ -143,6 +154,7 @@ export default function Home() {
         )}
       </div>
 
+      {/* Footer */}
       <Footer />
     </div>
   );
