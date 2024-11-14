@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function MainGoal({ name, progress }){
     return(
-      <Link href="/MainGoalViewer">
+      <Link href="/maingoalviewer">
         <div className="goalCard bg-gray-100 p-4 rounded-lg shadow-md">
           <h1 className="text-lg font-semibold mb-2">{name}</h1>
           <div className="progressBar w-full bg-gray-300 rounded-full h-2 mb-2">

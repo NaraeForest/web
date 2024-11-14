@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { goals } from "../data/Goals";
+import { goals } from "../data/goals";
 
 const MainGoalEdit = () => {
   const router = useRouter();

@@ -1,27 +1,30 @@
 import { useRouter } from "next/router";
-import { goals } from "../data/Goals";
+import { goals } from "../data/goals";
 
 const MainGoalViewer = () => {
   const router = useRouter();
 
-  const handleBoxClick = (position: string) => {
-    router.push(`/SubGoal/${position}`); // 동적 경로로 이동
+  const handleBoxClick = (position: string, goalName: string) => {
+    router.push({
+      pathname: "/subgoalviewer",
+      query: { position, subGoalName: goalName },
+    });
   };
 
   const handleEditClick = () => {
-    router.push("/MainGoalEdit");
+    router.push("/maingoaledit");
   };
 
   return (
     <div className="h-screen flex flex-col bg-gray-100 p-4">
       {/* 헤더 */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <button className="text-lg" onClick={() => router.back()}>
           ✕
         </button>
-        <h1 className="text-xl font-bold">{goals.mainGoal}</h1>
+        <h1 className="text-xl font-bold text-gray-800">{goals.mainGoal}</h1>
         <button className="text-lg" onClick={handleEditClick}>
-          <img src="/pencil.svg"></img>
+          <img src="/pencil.svg" alt="Edit" />
         </button>
       </div>
 
@@ -31,29 +34,53 @@ const MainGoalViewer = () => {
       </div>
 
       {/* 3x3 Mandalart Grid */}
-      <div className="grid grid-cols-3 grid-rows-3 gap-2">
+      <div
+        className="flex-grow"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(3, 1fr)",
+          gap: "8px",
+          aspectRatio: "1 / 1",
+          maxHeight: "70%", // 만다라트가 전체 화면의 약 2/3 차지
+          margin: "0 auto",
+        }}
+      >
         {Array.from({ length: 9 }, (_, index) => {
           const isCenter = index === 4;
-          const position = isCenter
-            ? "center"
-            : goals.subGoals[index > 4 ? index - 1 : index]?.position;
+          const subGoal = goals.subGoals[index > 4 ? index - 1 : index];
+          const position = isCenter ? "center" : subGoal?.position;
 
           return (
             <div
               key={index}
-              onClick={() => handleBoxClick(position!)}
-              className={`flex items-center justify-center rounded-lg border p-4 cursor-pointer ${
+              onClick={() =>
+                !isCenter &&
+                handleBoxClick(position!, subGoal?.goal || "Undefined Goal")
+              }
+              className={`flex items-center justify-center rounded-md border-2 cursor-pointer transition-transform transform hover:scale-105 ${
                 isCenter
-                  ? "bg-gray-900 text-white font-bold"
-                  : "bg-gray-100 text-gray-700"
+                  ? "bg-black text-white font-bold"
+                  : "bg-white text-gray-800 border-gray-300"
               }`}
+              style={{
+                aspectRatio: "1 / 1",
+              }}
             >
-              {isCenter
-                ? goals.mainGoal
-                : goals.subGoals[index > 4 ? index - 1 : index]?.goal}
+              {isCenter ? goals.mainGoal : subGoal?.goal}
             </div>
           );
         })}
+      </div>
+
+      {/* 아래쪽 여백 */}
+      <div
+        className="flex items-center justify-center bg-gray-200 rounded-lg shadow-inner mt-4"
+        style={{
+          height: "20%", // 추천 서비스 영역은 전체 화면의 약 1/5 차지
+        }}
+      >
+        <p className="text-gray-500">추천 서비스 및 트렌드 분석 영역</p>
       </div>
     </div>
   );

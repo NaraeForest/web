@@ -17,7 +17,7 @@ export default function Footer() {
         </button>
         <button
           className="flex flex-col items-center text-base"
-          onClick={() => router.push("/FeedHome")} // FeedHome으로 이동
+          onClick={() => router.push("/feedhome")} // FeedHome으로 이동
         >
           <span>
             <img src="/at-symbol.svg" />
@@ -35,7 +35,7 @@ export default function Footer() {
         </button>
         <button
           className="flex flex-col items-center text-base"
-          onClick={() => router.push("/MyPage")} // MyPage로 이동 (가상)
+          onClick={() => router.push("/mypage")} // MyPage로 이동 (가상)
         >
           <span>
             <img src="/user.svg" />
