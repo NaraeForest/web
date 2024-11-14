@@ -1,5 +1,5 @@
 import SubGoal from "@/components/SubGoal"
-import MainGoal from "@/components/mainGoal"
+import MainGoal from "@/components/MainGoal"
 import Link from "next/link";
 
 export default function main(){
@@ -27,7 +27,7 @@ export default function main(){
         <div className="flex-1 px-4 pb-14 overflow-y-auto">
           <div className="sub-goals-container bg-gray-100 p-4 rounded-lg shadow-md">
             {subGoals.map((goal, index) => (
-              <Link href="/SubGoalViewer" key={index}>
+              <Link href="/subgoalviewer" key={index}>
                 <SubGoal name={goal.name} progress={goal.progress} />
               </Link>
             ))}

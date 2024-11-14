@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import MainGoal from "@/components/mainGoal";
-import Footer from "@/components/footer";
-import Feed from "@/components/feed";
+import MainGoal from "@/components/MainGoal";
+import Footer from "@/components/Footer";
+import Feed from "@/components/Feed";
 
 export default function Home() {
   const goals = [
