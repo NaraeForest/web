@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function SubGoal({ name, progress }) {
+type SubGoalProps = {
+  name: string,
+  progress: number,
+};
+
+export default function SubGoal({ name, progress }:SubGoalProps) {
   return (
     <div className="subGoalCard bg-white p-4 rounded-lg shadow-md mb-4">
       <h4 className="text-base font-semibold mb-2">{name}</h4>

@@ -1,5 +1,5 @@
-import SubGoal from "@/components/SubGoal"
-import MainGoal from "@/components/MainGoal"
+import SubGoal from "../components/subgoal"
+import MainGoal from "../components/main-goal"
 import Link from "next/link";
 
 export default function main(){

@@ -1,6 +1,6 @@
-import HeadMain from "@/components/MainHeader";
-import Goal from "@/components/Goal";
-import Footer from "@/components/Footer";
+import HeadMain from "@/components/main-header";
+import Goal from "@/components/goal";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (

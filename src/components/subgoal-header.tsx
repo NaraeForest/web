@@ -1,9 +1,10 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-export default function Header({ title }) {
-  const router = useRouter();
+type HeaderProps = {
+  title: string,
+}
+export default function Header({ title }: HeaderProps) {
 
   return (
     <div className="header flex items-center mb-6">

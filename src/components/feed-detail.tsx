@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { feedData } from "../data/Feeds";
+import { feedData } from "../data/feeds";
 
 const FeedDetail: React.FC = () => {
   const router = useRouter();
