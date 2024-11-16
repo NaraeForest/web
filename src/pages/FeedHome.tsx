@@ -42,11 +42,7 @@ const FeedHome: React.FC = () => {
     };
 
     window.addEventListener("mousemove", onMouseMove);
-<<<<<<<< Updated upstream:src/pages/feedhome.tsx
     window.addEventListener("touchmove", onMouseMove as any, { passive: false }); // 스크롤 방지
-========
-    window.addEventListener("touchmove", onMouseMove);
->>>>>>>> Stashed changes:src/pages/feed-home.tsx
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("touchend", onMouseUp);
   };
