@@ -14,7 +14,7 @@ export default function SubGoalEdit() {
   const handleSave = () => {
     alert(`Saved SubGoal: ${goalName}`);
     router.push({
-      pathname: "/SubGoalViewer",
+      pathname: "/subgoal-viewer",
       query: { position, subGoalName: goalName },
     });
   };

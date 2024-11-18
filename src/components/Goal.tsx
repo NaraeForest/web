@@ -27,7 +27,7 @@ export default function main(){
         <div className="flex-1 px-4 pb-14 overflow-y-auto scrollbar-hide">
           <div className="sub-goals-container bg-gray-100 p-4 rounded-lg shadow-md">
             {subGoals.map((goal, index) => (
-              <Link href="/subgoalviewer" key={index}>
+              <Link href="/subgoal-viewer" key={index}>
                 <SubGoal name={goal.name} progress={goal.progress} />
               </Link>
             ))}
