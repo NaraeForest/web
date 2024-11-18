@@ -4,75 +4,58 @@ import Footer from "@/components/footer";
 import Feed from "@/components/feed";
 
 export default function Home() {
-  const router = useRouter();
-  const [currentTab, setCurrentTab] = useState("Goals");
-  const feedContainerRef = useRef<HTMLDivElement | null>(null);
-  
   const goals = [
     { name: "Learn Infra.", progress: 80 },
     { name: "Complete Project X", progress: 50 },
     { name: "Study Algorithms", progress: 70 },
   ];
- 
+
+  const feeds = [
+    {
+      userName: "Jacob Lee",
+      category : "private",
+      time: "1 hour ago",
+      content: "내 문제를 누가 해결해줬으면~ 모든 안티패턴 프로그램들이 모두 인식되었으면 정말 좋겠다~",
+      likes: 15,
+      comments: 3,
+      isDetail: false,
+    },
+
+    {
+      userName: "Sync Baek",
+      category : "private",
+      time: "1 hour ago",
+      content: "아웅 하기싫어",
+      likes: 16,
+      comments: 2,
+      isDetail: false,
+    },
+
+    {
+      userName: "WooWoo",
+      category : "private",
+      time: "1 hour ago",
+      content: "IPO의 힘 알아보고 공유가 사용되었습니다. 전세계 애플리케이션 구현 내내 적용을 안다 한다.",
+      likes: 15,
+      comments: 3,
+      isDetail: false,
+    },
+
+    {
+      userName: "WooWoo",
+      category : "private",
+      time: "1 hour ago",
+      content: "오늘 뭐해",
+      likes: 15,
+      comments: 3,
+      isDetail: false,
+    },
+  ];
+
+  const [currentTab, setCurrentTab] = useState("Goals");
+
   const [Username, setUsername] = useState("이재호");
   const [Describe, setDescribe] = useState("밖에 나온 순간 끝났어, 날씨는 좋은데 앞으로 못 나아가");
-
-  const marketingFeeds = feedData.filter((feed) => feed.userName === "백종원");
-
-  // 드래그 상태 변수
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragged, setDragged] = useState(false); // 클릭 방지를 위한 추가 상태
-  const [startY, setStartY] = useState(0);
-  const [scrollTop, setScrollTop] = useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!feedContainerRef.current) return;
-
-    const start = "touches" in e ? e.touches[0].clientY : e.clientY;
-    setStartY(start);
-    setScrollTop(feedContainerRef.current.scrollTop);
-    setIsDragging(true); // 드래그 상태 시작
-    setDragged(false); // 클릭 방지 초기화
-  };
-
-  const handleMouseMove = (e: MouseEvent | TouchEvent) => {
-    if (!feedContainerRef.current || !isDragging) return;
-
-    if (Math.abs(walk) > 5) {
-      feedContainerRef.current.scrollTop = scrollTop + walk;
-      setDragged(true); // 드래그 발생으로 판단
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false); // 드래그 상태 해제
-    setTimeout(() => setDragged(false), 50); // 클릭 방지 해제
-  };
-
-  useEffect(() => {
-    // 전역 이벤트 리스너 추가
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove as EventListener);
-      window.addEventListener("mouseup", handleMouseUp);
-      window.addEventListener("touchmove", handleMouseMove as EventListener, { passive: false });
-      window.addEventListener("touchend", handleMouseUp);
-    }
-
-    return () => {
-      // 전역 이벤트 리스너 제거
-      window.removeEventListener("mousemove", handleMouseMove as EventListener);
-      window.removeEventListener("mouseup", handleMouseUp);
-      window.removeEventListener("touchmove", handleMouseMove as EventListener);
-      window.removeEventListener("touchend", handleMouseUp);
-    };
-  }, [isDragging]);
-
-const handleFeedClick = (id: number) => {
-    if (!dragged) {
-      // 드래그 중이 아니고 클릭으로 판단될 때만 동작
-      router.push(`/feed/${id}`);
-    }
-  };
 
   // 상태 관리: 이미지가 존재하는지 확인하기 위한 변수
   const [profileImage, setProfileImage] = useState("/default-profile.jpg");
@@ -115,7 +98,6 @@ const handleFeedClick = (id: number) => {
       <div className="relative px-4 mt-4 flex items-center justify-between">
         {/* 프로필 사진 및 이름/상태 메시지 */}
         <div className="flex items-center">
-
           <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white">
             <img
               src={profileImage}
@@ -140,6 +122,83 @@ const handleFeedClick = (id: number) => {
           </button>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
+
+            {/* 이름 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 상태 메시지 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Status Message</label>
+              <textarea
+                value={newDescribe}
+                onChange={(e) => setNewDescribe(e.target.value)}
+                rows={3}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 프로필 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewProfileImage(e.target.files[0])}
+                  }
+                }
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 배경 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Background Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewBackgroundImage(e.target.files[0]);
+                  }
+                }}
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 저장 및 취소 버튼 */}
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md"
+                onClick={() => setEditModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 탭 선택 (Goals / Feeds) */}
       <div className="mt-6 border-b border-gray-300">
@@ -172,28 +231,21 @@ const handleFeedClick = (id: number) => {
             </div>
           ))
         ) : (
-          <div>
-            {marketingFeeds.map((feed) => (
-              <div
-                key={feed.id}
-                className="mb-4"
-                onClick={() => handleFeedClick(feed.id)}
-              >
-                <Feed
-                  userName={feed.userName}
-                  category={feed.category}
-                  time={feed.time}
-                  content={feed.content}
-                  likes={feed.likes}
-                  comments={feed.comments}
-                  isDetail={false}
-                />
-              </div>
-            ))}
-          </div>
+          feeds.map((feed, index) => (
+            <Feed
+              key={index}
+              category={feed.category}
+              userName={feed.userName}
+              time={feed.time}
+              content={feed.content}
+              likes={feed.likes}
+              comments={feed.comments}
+              isDetail={false} // 상세 페이지가 아님
+            />
+          ))
         )}
       </div>
-      
+
       {/* Footer */}
       <Footer />
     </div>
