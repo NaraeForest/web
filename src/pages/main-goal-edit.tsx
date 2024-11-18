@@ -10,7 +10,7 @@ const MainGoalEdit = () => {
 
   const handleSave = () => {
     alert(`저장된 목표: ${mainGoal}, 카테고리: ${category}`);
-    router.push("/maingoalviewer");
+    router.push("/main-goal-viewer");
   };
 
   return (

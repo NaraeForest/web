@@ -28,7 +28,7 @@ export default function SubGoalViewer() {
           </div>
           <Link
             href={{
-              pathname: "/subgoaledit",
+              pathname: "/subgoal-edit",
               query: { position, subGoalName },
             }}
           >

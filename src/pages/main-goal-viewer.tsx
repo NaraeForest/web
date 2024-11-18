@@ -7,13 +7,13 @@ const MainGoalViewer = () => {
 
   const handleBoxClick = (position: string, goalName: string) => {
     router.push({
-      pathname: "/subgoalviewer",
+      pathname: "/subgoal-viewer",
       query: { position, subGoalName: goalName },
     });
   };
 
   const handleEditClick = () => {
-    router.push("/maingoaledit");
+    router.push("/main-goal-edit");
   };
 
   return (
