@@ -1,7 +1,12 @@
 import React from 'react';
 import Link from "next/link";
 
-export default function MainGoal({ name, progress }) {
+interface MainGoalProps {
+    name: string,
+    progress: number,
+}
+
+export default function MainGoal({ name, progress }: MainGoalProps) {
     return (
         <Link href="/maingoalviewer">
             <div className="goalCard bg-white p-4 rounded-lg shadow-md">
