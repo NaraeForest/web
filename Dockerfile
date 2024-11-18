@@ -15,7 +15,7 @@ ENV HOSTNAME 0.0.0.0
 
 COPY --from=builder /app/.next /app/.next
 COPY --from=builder /app/public ./public
-COPY /app/package.json /app/package-lock.json ./
+COPY package.json package-lock.json ./
 
 EXPOSE 3000
 

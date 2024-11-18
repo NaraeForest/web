@@ -8,4 +8,10 @@ const nextConfig: NextConfig = {
   output: "standalone",
 };
 
+module.exports = {
+  eslint: {
+    dirs: [],
+  }
+}
+
 export default nextConfig;
