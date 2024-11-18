@@ -10,8 +10,8 @@ export default function MyPage() {
   const [currentTab, setCurrentTab] = useState("Goals");
   const feedContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const Username = "백종원";
-  const Describe = "맛있는 음식과 새로운 도전을 항상 추구합니다.";
+  const [Username, setUserName] = useState("백종원");
+  const [Describe, setDescribe] = useState("맛있는 음식과 새로운 도전을 항상 추구합니다.");
 
   const goals = [
     { name: "Launch New Recipe", progress: 90 },
@@ -79,15 +79,50 @@ export default function MyPage() {
     }
   };
 
+  const [profileImage, setProfileImage] = useState("/default-profile.svg");
+  const [backgroundImage, setBackgroundImage] = useState("/default-background.svg");
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [newUsername, setNewUsername] = useState(Username);
+  const [newDescribe, setNewDescribe] = useState(Describe);
+  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+  const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(null);
+
+  const handleSave = () => {
+    setNewUsername(newUsername);
+    setNewDescribe(newDescribe);
+
+    if (newProfileImage) {
+      const profileURL = URL.createObjectURL(newProfileImage);
+      setProfileImage(profileURL);
+    }
+    if (newBackgroundImage) {
+      const backgroundURL = URL.createObjectURL(newBackgroundImage);
+      setBackgroundImage(backgroundURL);
+    }
+
+    setEditModalOpen(false);
+  };
+
+
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-50">
       {/* 상단 배경 */}
-      <div className="h-40 bg-cover bg-center relative" style={{ backgroundImage: `url("/default-background.svg")` }}></div>
+      <div className="h-40 bg-cover bg-center relative" 
+      style={{ 
+        backgroundImage: `url(${backgroundImage})`,
+      }}></div>
 
       {/* 프로필 섹션 */}
       <div className="relative px-4 mt-4 flex items-center justify-between">
         <div className="flex items-center">
-          <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white"></div>
+          <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white">
+            <img
+              src={profileImage}
+              className="flex items-center"
+              style={{ aspectRatio: "1 / 1"}}
+            />
+          </div>
           <div className="ml-4">
             <h2 className="text-lg font-semibold">{Username}</h2>
             <p className="text-gray-600 text-sm mt-1">{Describe}</p>
@@ -95,11 +130,89 @@ export default function MyPage() {
         </div>
 
         <div className="ml-auto">
-          <button className="px-6 py-2 bg-black text-white text-sm rounded-md" style={{ width: "120px", height: "40px" }}>
+          <button className="px-6 py-2 bg-black text-white text-sm rounded-md" 
+          style={{ width: "120px", height: "40px" }}
+          onClick={() => setEditModalOpen(true)}
+          >
             Edit Profile
           </button>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
+
+            {/* Name */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* Status Message */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Status Message</label>
+              <textarea
+                value={newDescribe}
+                onChange={(e) => setNewDescribe(e.target.value)}
+                rows={3}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* Profile Image */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0)
+                    setNewProfileImage(e.target.files[0]);
+                }}
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* Background Image */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Background Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0)
+                    setNewBackgroundImage(e.target.files[0])
+                }}
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* Save and Cancel */}
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md"
+                onClick={() => setEditModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 탭 선택 (Goals / Feeds) */}
       <div className="mt-6 border-b border-gray-300">
