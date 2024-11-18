@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup -node@v3
+      with:
+        node-version: 18
+        
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag project-05:$(date +%s)
+      run: docker build -t test . 
