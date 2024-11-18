@@ -1,8 +1,10 @@
 FROM node:alpine AS builder
 WORKDIR /app
-COPY . .
+
+COPY package.json package-lock.json ./
 RUN npm ci
 
+COPY . .
 RUN npm run build
 
 FROM node:alpine 
@@ -16,7 +18,7 @@ ENV HOSTNAME 0.0.0.0
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 EXPOSE 3000
 
