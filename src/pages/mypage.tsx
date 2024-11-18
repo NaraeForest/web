@@ -19,7 +19,9 @@ export default function MyPage() {
     { name: "Write a New Cookbook", progress: 50 },
   ];
 
+
   const marketingFeeds = feedData.filter((feed) => feed.userName === "백종원");
+
 
   // 드래그 상태 변수
   const [isDragging, setIsDragging] = useState(false);
@@ -42,6 +44,7 @@ export default function MyPage() {
 
     const y = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
     const walk = startY - y;
+
 
     if (Math.abs(walk) > 5) {
       feedContainerRef.current.scrollTop = scrollTop + walk;
@@ -77,17 +80,22 @@ export default function MyPage() {
       // 드래그 중이 아니고 클릭으로 판단될 때만 동작
       router.push(`/feed/${id}`);
     }
+
   };
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-50">
       {/* 상단 배경 */}
+
       <div className="h-40 bg-cover bg-center relative" style={{ backgroundImage: `url("/default-background.svg")` }}></div>
+
 
       {/* 프로필 섹션 */}
       <div className="relative px-4 mt-4 flex items-center justify-between">
         <div className="flex items-center">
+
           <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white"></div>
+
           <div className="ml-4">
             <h2 className="text-lg font-semibold">{Username}</h2>
             <p className="text-gray-600 text-sm mt-1">{Describe}</p>
@@ -95,11 +103,90 @@ export default function MyPage() {
         </div>
 
         <div className="ml-auto">
+
           <button className="px-6 py-2 bg-black text-white text-sm rounded-md" style={{ width: "120px", height: "40px" }}>
+
             Edit Profile
           </button>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
+
+            {/* 이름 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 상태 메시지 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Status Message</label>
+              <textarea
+                value={newDescribe}
+                onChange={(e) => setNewDescribe(e.target.value)}
+                rows={3}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 프로필 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewProfileImage(e.target.files[0])}
+                  }
+                }
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 배경 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Background Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewBackgroundImage(e.target.files[0]);
+                  }
+                }}
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 저장 및 취소 버튼 */}
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md"
+                onClick={() => setEditModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 탭 선택 (Goals / Feeds) */}
       <div className="mt-6 border-b border-gray-300">
@@ -142,6 +229,7 @@ export default function MyPage() {
             ))}
           </div>
         ) : (
+
           <div>
             {marketingFeeds.map((feed) => (
               <div
@@ -161,6 +249,7 @@ export default function MyPage() {
               </div>
             ))}
           </div>
+
         )}
       </div>
 
