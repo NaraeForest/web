@@ -1,37 +1,87 @@
-import React, { useState } from "react";
+// components/feed-detail.tsx
+import React, { useState, useRef } from "react";
+import Feed from "./Feed";
+import FeedWriter from "./FeedWriter";
 import { useRouter } from "next/router";
-import { feedData } from "../data/feeds";
 
-const FeedDetail: React.FC = () => {
+interface FeedDetailProps {
+  feed: {
+    id: number;
+    userName: string;
+    category: string;
+    time: string;
+    content: string;
+    likes: number;
+    comments: number;
+    replies: Array<{
+      id: number;
+      userName: string;
+      time: string;
+      content: string;
+      likes: number;
+      comments: number;
+    }>;
+  };
+}
+
+const FeedDetail: React.FC<FeedDetailProps> = ({ feed }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Edit/Report 메뉴 토글
+  const [isReportOpen, setIsReportOpen] = useState(false); // Report 팝업
+  const [reportText, setReportText] = useState(""); // Report 입력값
+  const replyContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { id } = router.query; // URL에서 id 추출
-  const feed = feedData.find((feed) => feed.id === Number(id)); // 해당 피드 찾기
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 토글 상태
-  const [isReportOpen, setIsReportOpen] = useState(false); // Report 팝업 상태
-  const [reportMessage, setReportMessage] = useState(""); // Report 메시지 상태
-  const [likes, setLikes] = useState(feed ? feed.likes : 0); // 좋아요 상태
+  let startY = 0; // 드래그 시작 위치
+  let scrollTop = 0; // 드래그 시작 시 스크롤 위치
 
-  if (!feed) return <div>Feed not found</div>;
+  // 댓글 드래그 핸들러
+  const handleReplyDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    const container = replyContainerRef.current;
+    if (!container) return;
 
-  // 좋아요 버튼 핸들러
-  const handleLike = () => {
-    setLikes(likes + 1); // 좋아요 수 증가
+    startY = "touches" in e ? e.touches[0].clientY : e.clientY;
+    scrollTop = container.scrollTop;
+
+    const onMouseMove = (e: MouseEvent | TouchEvent) => {
+      const y = "touches" in e ? e.touches[0].clientY : e.clientY;
+      const walk = startY - y;
+
+      container.scrollTop = scrollTop + walk; // 스크롤 이동
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("touchmove", onMouseMove);
+      window.removeEventListener("touchend", onMouseUp);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("touchmove", onMouseMove as any, { passive: false });
+    window.addEventListener("touchend", onMouseUp);
   };
 
   // Report 팝업 제출 핸들러
   const handleReportSubmit = () => {
-    console.log("Report submitted:", reportMessage);
+    alert(`Report submitted: ${reportText}`);
+    setReportText(""); // 입력값 초기화
     setIsReportOpen(false); // 팝업 닫기
-    setReportMessage(""); // 메시지 초기화
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="flex flex-col h-screen">
       {/* 상단 헤더 */}
       <div className="bg-white shadow-md sticky top-0 z-10 flex justify-between items-center px-4 py-2">
-        <button onClick={() => router.back()} className="text-xl">←</button>
+        <button onClick={() => router.push("/feed-home")} className="text-xl">
+          ←
+        </button>
         <h1 className="text-lg font-bold">Feed Detail</h1>
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-xl">⋮</button>
+        <button
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          className="text-xl"
+        >
+          ⋮
+        </button>
       </div>
 
       {/* Edit/Report 메뉴 */}
@@ -39,19 +89,13 @@ const FeedDetail: React.FC = () => {
         <div className="absolute top-14 right-4 bg-white border shadow-md rounded-md w-40">
           <button
             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-            onClick={() => {
-              setIsMenuOpen(false);
-              alert("Edit clicked!");
-            }}
+            onClick={() => alert("Edit clicked!")}
           >
             Edit
           </button>
           <button
             className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-            onClick={() => {
-              setIsMenuOpen(false);
-              setIsReportOpen(true); // Report 팝업 열기
-            }}
+            onClick={() => setIsReportOpen(true)} // Report 팝업 열기
           >
             Report
           </button>
@@ -60,72 +104,72 @@ const FeedDetail: React.FC = () => {
 
       {/* Report 팝업 */}
       {isReportOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-            <h2 className="text-lg font-bold mb-4">Report</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-80">
+            <h2 className="text-lg font-bold mb-4">Report Feed</h2>
             <textarea
-              className="w-full border rounded-lg p-2 mb-4 resize-none"
-              rows={4}
+              value={reportText}
+              onChange={(e) => setReportText(e.target.value)}
               placeholder="What's wrong with this feed?"
-              value={reportMessage}
-              onChange={(e) => setReportMessage(e.target.value)}
+              className="w-full border border-gray-300 p-2 rounded resize-none h-24"
             />
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
               <button
                 onClick={() => setIsReportOpen(false)}
-                className="text-gray-500 px-4 py-2 mr-2"
+                className="mr-4 text-gray-500 hover:text-black"
               >
                 Cancel
               </button>
               <button
                 onClick={handleReportSubmit}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
               >
-                Send
+                Submit
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 상세 내용 */}
-      <div className="flex-1 overflow-y-scroll px-4 py-4">
-        {/* 사용자 정보 */}
-        <div className="flex items-center mb-4">
-          <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-          <div className="ml-4">
-            <h3 className="text-md font-bold">{feed.userName}</h3>
-            <span className="text-xs text-gray-500">{feed.time}</span>
-          </div>
-        </div>
+      {/* 메인 피드 */}
+      <Feed
+        userName={feed.userName}
+        category={feed.category || "No Category"}
+        time={feed.time}
+        content={feed.content}
+        likes={feed.likes}
+        comments={feed.comments}
+        isDetail
+      />
 
-        {/* 피드 전체 내용 */}
-        <p className="text-gray-700 mb-6">{feed.content}</p>
-
-        {/* 좋아요 및 댓글 */}
-        <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-          <button
-            onClick={handleLike}
-            className="flex items-center text-gray-500 hover:text-blue-500"
-          >
-            <span role="img" aria-label="like" className="mr-2">
-              👍
-            </span>
-            {likes} Likes
-          </button>
-          <span>{feed.comments} Comments</span>
-        </div>
-
-        {/* 댓글 입력창 */}
-        <div className="border-t pt-4">
-          <textarea
-            className="w-full border rounded-lg p-2 mb-2 resize-none"
-            rows={3}
-            placeholder="Write a comment..."
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg">Send</button>
-        </div>
+      {/* 댓글 영역 */}
+      <div
+        ref={replyContainerRef}
+        className="flex-1 px-4 no-scrollbar select-none overflow-hidden"
+        onMouseDown={handleReplyDragStart}
+        onTouchStart={handleReplyDragStart}
+        onDragStart={(e) => e.preventDefault()} // 드래그 방지
+      >
+        {feed.replies.length > 0 ? (
+          feed.replies.map((reply) => (
+            <Feed
+              key={reply.id}
+              userName={reply.userName}
+              category="" // 댓글에는 카테고리 표시 안 함
+              time={reply.time}
+              content={reply.content}
+              likes={reply.likes}
+              comments={reply.comments}
+              isDetail
+            />
+          ))
+        ) : (
+          <p className="text-gray-500 text-center mt-4">No comments yet.</p>
+        )}
       </div>
+
+      {/* FeedWriter */}
+      <FeedWriter />
     </div>
   );
 };
