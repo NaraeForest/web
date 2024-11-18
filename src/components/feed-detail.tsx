@@ -72,7 +72,7 @@ const FeedDetail: React.FC<FeedDetailProps> = ({ feed }) => {
     <div className="flex flex-col h-screen">
       {/* 상단 헤더 */}
       <div className="bg-white shadow-md sticky top-0 z-10 flex justify-between items-center px-4 py-2">
-        <button onClick={() => router.back()} className="text-xl">
+        <button onClick={() => router.push("/feed-home")} className="text-xl">
           ←
         </button>
         <h1 className="text-lg font-bold">Feed Detail</h1>

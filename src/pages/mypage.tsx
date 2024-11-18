@@ -1,23 +1,21 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import MainGoal from "@/components/main-goal";
 import Footer from "@/components/footer";
 import Feed from "@/components/feed";
-import { feedData } from "@/data/feeds";
-import { useRouter } from "next/router";
 
-export default function MyPage() {
+export default function Home() {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState("Goals");
   const feedContainerRef = useRef<HTMLDivElement | null>(null);
-
-  const Username = "백종원";
-  const Describe = "맛있는 음식과 새로운 도전을 항상 추구합니다.";
-
+  
   const goals = [
-    { name: "Launch New Recipe", progress: 90 },
-    { name: "Market Strategy for Restaurants", progress: 70 },
-    { name: "Write a New Cookbook", progress: 50 },
+    { name: "Learn Infra.", progress: 80 },
+    { name: "Complete Project X", progress: 50 },
+    { name: "Study Algorithms", progress: 70 },
   ];
+ 
+  const [Username, setUsername] = useState("이재호");
+  const [Describe, setDescribe] = useState("밖에 나온 순간 끝났어, 날씨는 좋은데 앞으로 못 나아가");
 
   const marketingFeeds = feedData.filter((feed) => feed.userName === "백종원");
 
@@ -39,9 +37,6 @@ export default function MyPage() {
 
   const handleMouseMove = (e: MouseEvent | TouchEvent) => {
     if (!feedContainerRef.current || !isDragging) return;
-
-    const y = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
-    const walk = startY - y;
 
     if (Math.abs(walk) > 5) {
       feedContainerRef.current.scrollTop = scrollTop + walk;
@@ -72,30 +67,75 @@ export default function MyPage() {
     };
   }, [isDragging]);
 
-  const handleFeedClick = (id: number) => {
+const handleFeedClick = (id: number) => {
     if (!dragged) {
       // 드래그 중이 아니고 클릭으로 판단될 때만 동작
       router.push(`/feed/${id}`);
     }
   };
 
+  // 상태 관리: 이미지가 존재하는지 확인하기 위한 변수
+  const [profileImage, setProfileImage] = useState("/default-profile.jpg");
+  const [backgroundImage, setBackgroundImage] = useState("/default-background.svg");
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [newUsername, setNewUsername] = useState(Username);
+  const [newDescribe, setNewDescribe] = useState(Describe);
+  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+  const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(null);
+
+  const handleSave = () => {
+    setUsername(newUsername);
+    setDescribe(newDescribe);
+    setEditModalOpen(false);
+
+    if (newProfileImage) {
+      const profileURL = URL.createObjectURL(newProfileImage);
+      setProfileImage(profileURL);
+    }
+    if (newBackgroundImage) {
+      const backgroundURL = URL.createObjectURL(newBackgroundImage);
+      setBackgroundImage(backgroundURL);
+    }
+
+    setEditModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-50">
       {/* 상단 배경 */}
-      <div className="h-40 bg-cover bg-center relative" style={{ backgroundImage: `url("/default-background.svg")` }}></div>
+      <div
+        className="h-40 bg-cover bg-center relative"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+        }}
+      ></div>
 
       {/* 프로필 섹션 */}
       <div className="relative px-4 mt-4 flex items-center justify-between">
+        {/* 프로필 사진 및 이름/상태 메시지 */}
         <div className="flex items-center">
-          <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white"></div>
+
+          <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white">
+            <img
+              src={profileImage}
+              className="w-full h-full rounded-full object-cover"
+              style={{ aspectRatio: "1 / 1" }}
+            />
+          </div>
           <div className="ml-4">
             <h2 className="text-lg font-semibold">{Username}</h2>
             <p className="text-gray-600 text-sm mt-1">{Describe}</p>
           </div>
         </div>
 
+        {/* Edit Profile 버튼 */}
         <div className="ml-auto">
-          <button className="px-6 py-2 bg-black text-white text-sm rounded-md" style={{ width: "120px", height: "40px" }}>
+          <button
+            className="px-6 py-2 bg-black text-white text-sm rounded-md"
+            style={{ width: "120px", height: "40px" }}
+            onClick={() => setEditModalOpen(true)}
+          >
             Edit Profile
           </button>
         </div>
@@ -124,23 +164,13 @@ export default function MyPage() {
       </div>
 
       {/* Goals / Feeds 콘텐츠 */}
-      <div
-        ref={feedContainerRef}
-        className={`flex-1 overflow-hidden px-4 pb-16 select-none ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
-        }`}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleMouseDown}
-        style={{ overflowY: "hidden", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
-      >
+      <div className="flex-1 overflow-y-auto p-4 pb-16">
         {currentTab === "Goals" ? (
-          <div>
-            {goals.map((goal, index) => (
-              <div key={index} className="mb-4">
-                <MainGoal name={goal.name} progress={goal.progress} />
-              </div>
-            ))}
-          </div>
+          goals.map((goal, index) => (
+            <div key={index} className="mb-4">
+              <MainGoal name={goal.name} progress={goal.progress} />
+            </div>
+          ))
         ) : (
           <div>
             {marketingFeeds.map((feed) => (
@@ -163,7 +193,7 @@ export default function MyPage() {
           </div>
         )}
       </div>
-
+      
       {/* Footer */}
       <Footer />
     </div>
