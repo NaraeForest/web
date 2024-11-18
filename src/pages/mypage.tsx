@@ -13,59 +13,76 @@ export default function Home() {
   const feeds = [
     {
       userName: "Jacob Lee",
+      category : "private",
       time: "1 hour ago",
       content: "내 문제를 누가 해결해줬으면~ 모든 안티패턴 프로그램들이 모두 인식되었으면 정말 좋겠다~",
       likes: 15,
       comments: 3,
+      isDetail: false,
     },
+
     {
       userName: "Sync Baek",
+      category : "private",
       time: "1 hour ago",
       content: "아웅 하기싫어",
       likes: 16,
       comments: 2,
+      isDetail: false,
     },
+
     {
       userName: "WooWoo",
+      category : "private",
       time: "1 hour ago",
       content: "IPO의 힘 알아보고 공유가 사용되었습니다. 전세계 애플리케이션 구현 내내 적용을 안다 한다.",
       likes: 15,
       comments: 3,
+      isDetail: false,
     },
+
     {
       userName: "WooWoo",
+      category : "private",
       time: "1 hour ago",
       content: "오늘 뭐해",
       likes: 15,
       comments: 3,
+      isDetail: false,
     },
   ];
 
   const [currentTab, setCurrentTab] = useState("Goals");
 
-  const Username = "이재호";
-  const Describe = "밖에 나온 순간 끝났어, 날씨는 좋은데 앞으로 못 나아가";
+  const [Username, setUsername] = useState("이재호");
+  const [Describe, setDescribe] = useState("밖에 나온 순간 끝났어, 날씨는 좋은데 앞으로 못 나아가");
 
   // 상태 관리: 이미지가 존재하는지 확인하기 위한 변수
-  const [backgroundImageExists, setBackgroundImageExists] = useState(false);
-  const [profileImageExists, setProfileImageExists] = useState(false);
+  const [profileImage, setProfileImage] = useState("/default-profile.jpg");
+  const [backgroundImage, setBackgroundImage] = useState("/default-background.svg");
 
-  // 이미지 존재 여부 확인 함수
-  useEffect(() => {
-    // 배경 이미지 확인
-    fetch("/background.jpg")
-      .then((res) => {
-        if (res.ok) setBackgroundImageExists(true); // 배경 이미지가 있으면 true
-      })
-      .catch(() => setBackgroundImageExists(false)); // 없으면 false
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [newUsername, setNewUsername] = useState(Username);
+  const [newDescribe, setNewDescribe] = useState(Describe);
+  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+  const [newBackgroundImage, setNewBackgroundImage] = useState<File | null>(null);
 
-    // 프로필 이미지 확인
-    fetch("/profile.jpg")
-      .then((res) => {
-        if (res.ok) setProfileImageExists(true); // 프로필 이미지가 있으면 true
-      })
-      .catch(() => setProfileImageExists(false)); // 없으면 false
-  }, []);
+  const handleSave = () => {
+    setUsername(newUsername);
+    setDescribe(newDescribe);
+    setEditModalOpen(false);
+
+    if (newProfileImage) {
+      const profileURL = URL.createObjectURL(newProfileImage);
+      setProfileImage(profileURL);
+    }
+    if (newBackgroundImage) {
+      const backgroundURL = URL.createObjectURL(newBackgroundImage);
+      setBackgroundImage(backgroundURL);
+    }
+
+    setEditModalOpen(false);
+  };
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gray-50">
@@ -73,7 +90,7 @@ export default function Home() {
       <div
         className="h-40 bg-cover bg-center relative"
         style={{
-          backgroundImage: `url(${backgroundImageExists ? "/background.jpg" : "/default-background.svg"})`,
+          backgroundImage: `url(${backgroundImage})`,
         }}
       ></div>
 
@@ -83,13 +100,9 @@ export default function Home() {
         <div className="flex items-center">
           <div className="w-20 h-20 bg-gray-200 rounded-full border-4 border-white">
             <img
-              src={profileImageExists ? "/profile.jpg" : "/default-profile.jpg"}
+              src={profileImage}
               className="w-full h-full rounded-full object-cover"
               style={{ aspectRatio: "1 / 1" }}
-              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/default-profile.svg";
-              }}
             />
           </div>
           <div className="ml-4">
@@ -103,11 +116,89 @@ export default function Home() {
           <button
             className="px-6 py-2 bg-black text-white text-sm rounded-md"
             style={{ width: "120px", height: "40px" }}
+            onClick={() => setEditModalOpen(true)}
           >
             Edit Profile
           </button>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit Profile</h3>
+
+            {/* 이름 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <input
+                type="text"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 상태 메시지 수정 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Status Message</label>
+              <textarea
+                value={newDescribe}
+                onChange={(e) => setNewDescribe(e.target.value)}
+                rows={3}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
+              />
+            </div>
+
+            {/* 프로필 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Profile Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewProfileImage(e.target.files[0])}
+                  }
+                }
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 배경 이미지 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Background Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    setNewBackgroundImage(e.target.files[0]);
+                  }
+                }}
+                className="mt-1 block w-full text-sm text-gray-500"
+              />
+            </div>
+
+            {/* 저장 및 취소 버튼 */}
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md"
+                onClick={() => setEditModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 탭 선택 (Goals / Feeds) */}
       <div className="mt-6 border-b border-gray-300">
@@ -143,6 +234,7 @@ export default function Home() {
           feeds.map((feed, index) => (
             <Feed
               key={index}
+              category={feed.category}
               userName={feed.userName}
               time={feed.time}
               content={feed.content}
