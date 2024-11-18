@@ -7,13 +7,49 @@ import Footer from "../components/footer";
 const FeedHome: React.FC = () => {
   const router = useRouter();
 
-  // 참조 및 상태 관리
   const feedContainerRef = useRef<HTMLDivElement>(null);
   const tagContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 상태
   const dragThreshold = 5; // 클릭과 드래그를 구분하는 최소 거리
   let startY = 0; // 드래그 시작 Y 좌표
   let scrollTop = 0; // 드래그 시작 시 스크롤 위치
+
+  const [activeTags, setActiveTags] = useState<number[]>([]); // 활성화된 태그 상태
+
+  // 태그 클릭 핸들러
+  const toggleTag = (id: number) => {
+    setActiveTags((prev) =>
+      prev.includes(id) ? prev.filter((tag) => tag !== id) : [...prev, id]
+    );
+  };
+
+  // 태그 영역 드래그 핸들러
+  const handleTagDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    const container = tagContainerRef.current;
+    if (!container) return;
+
+    let startX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    let scrollLeft = container.scrollLeft;
+
+    const onMouseMove = (e: MouseEvent | TouchEvent) => {
+      const x = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const walk = x - startX; // 드래그 이동 거리
+      container.scrollLeft = scrollLeft - walk; // 수평 스크롤 이동
+      e.preventDefault(); // 기본 스크롤 방지
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("touchmove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("touchend", onMouseUp);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("touchmove", onMouseMove as any, { passive: false }); // 스크롤 방지
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("touchend", onMouseUp);
+  };
 
   // 피드 영역 드래그 핸들러
   const handleFeedDragStart = (e: React.MouseEvent | React.TouchEvent) => {
@@ -47,21 +83,12 @@ const FeedHome: React.FC = () => {
     window.addEventListener("touchend", onMouseUp);
   };
 
-  // 태그 활성화 토글
-  const toggleTag = (id: number) => {
-    setActiveTags((prev) =>
-      prev.includes(id) ? prev.filter((tag) => tag !== id) : [...prev, id]
-    );
-  };
-
   // 피드 클릭 핸들러
   const handleFeedClick = (id: number) => {
     if (!isDragging) {
       router.push(`/feed/${id}`);
     }
   };
-
-  const [activeTags, setActiveTags] = useState<number[]>([]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -72,7 +99,9 @@ const FeedHome: React.FC = () => {
         {/* 태그 버튼 영역 */}
         <div
           ref={tagContainerRef}
-          className="overflow-hidden whitespace-nowrap px-4 pb-4 border-b cursor-grab select-none"
+          className="overflow-x-auto whitespace-nowrap px-4 pb-4 border-b cursor-grab select-none no-scrollbar"
+          onMouseDown={handleTagDragStart}
+          onTouchStart={handleTagDragStart}
         >
           {Array.from({ length: 15 }, (_, index) => (
             <button
@@ -84,7 +113,7 @@ const FeedHome: React.FC = () => {
                   : "bg-gray-200 text-gray-800"
               }`}
             >
-              {`Tag ${index + 1}`}
+              Tag {index + 1}
             </button>
           ))}
         </div>
@@ -93,7 +122,7 @@ const FeedHome: React.FC = () => {
       {/* 피드 리스트 영역 */}
       <div
         ref={feedContainerRef}
-        className="flex-1 overflow-hidden px-4 pb-16 cursor-grab select-none"
+        className="flex-1 overflow-hidden px-4 pb-16 cursor-grab select-none no-scrollbar"
         onMouseDown={handleFeedDragStart}
         onTouchStart={handleFeedDragStart}
       >
