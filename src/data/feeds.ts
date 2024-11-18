@@ -199,4 +199,123 @@ export const feedData = [
       },
     ],
   },
+  {
+    id: 7,
+    userName: "백종원",
+    category: "Marketing",
+    time: "3 hours ago",
+    content: `
+      요즘 소상공인을 위한 마케팅 강의를 준비 중입니다. 
+      SNS 마케팅에서 가장 중요한 건 꾸준함과 진정성입니다. 
+      여러분의 가게를 돋보이게 할 방법은 무엇인가요? 함께 고민해봅시다!
+    `,
+    likes: 35,
+    comments: 5,
+    replies: [
+      {
+        id: 701,
+        userName: "Alice",
+        time: "2 hours ago",
+        content: "SNS에서 고객과 소통하는 모습을 보여주는 게 중요한 것 같아요!",
+        likes: 12,
+        comments: 0,
+      },
+      {
+        id: 702,
+        userName: "Bob",
+        time: "1 hour ago",
+        content: "가게의 스토리를 진솔하게 풀어내면 사람들이 공감할 거예요.",
+        likes: 10,
+        comments: 0,
+      },
+    ],
+  },
+  {
+    id: 8,
+    userName: "백종원",
+    category: "Marketing",
+    time: "4 hours ago",
+    content: `
+      고객에게 신뢰를 주는 가게 운영 방법에 대해 이야기해보고 싶습니다.
+      특히 초기 창업자들에게 꼭 필요한 노하우를 나눌 계획이에요.
+    `,
+    likes: 40,
+    comments: 6,
+    replies: [
+      {
+        id: 801,
+        userName: "Charlie",
+        time: "3 hours ago",
+        content: "신뢰는 맛과 서비스에서 나오는 것 같아요! 정성이 중요합니다.",
+        likes: 15,
+        comments: 0,
+      },
+    ],
+  },
+  {
+    id: 9,
+    userName: "백종원",
+    category: "Marketing",
+    time: "5 hours ago",
+    content: `
+      여러분, 매출 증대를 위한 이벤트를 진행할 때 가장 효과적이었던 방법은 무엇인가요? 
+      할인 이벤트 외에도 새로운 아이디어를 공유해주세요!
+    `,
+    likes: 28,
+    comments: 3,
+    replies: [
+      {
+        id: 901,
+        userName: "Eve",
+        time: "4 hours ago",
+        content: "쿠폰 적립을 통해 단골 고객을 유치하는 방법이 좋았어요!",
+        likes: 8,
+        comments: 0,
+      },
+    ],
+  },
+  {
+    id: 10,
+    userName: "백종원",
+    category: "Marketing",
+    time: "6 hours ago",
+    content: `
+      창업 초기에 꼭 해야 할 기본적인 것들에 대해 이야기하려고 합니다. 
+      손님들에게 사랑받는 가게를 만드는 첫걸음은 무엇일까요?
+    `,
+    likes: 33,
+    comments: 4,
+    replies: [
+      {
+        id: 1001,
+        userName: "Frank",
+        time: "5 hours ago",
+        content: "청결과 손님 응대가 가장 중요한 것 같아요. 기본에 충실합시다!",
+        likes: 12,
+        comments: 0,
+      },
+    ],
+  },
+  {
+    id: 11,
+    userName: "백종원",
+    category: "Marketing",
+    time: "7 hours ago",
+    content: `
+      가게를 위한 브랜딩 로고와 슬로건을 제작하는 방법에 대해 고민해보았습니다.
+      여러분의 가게를 돋보이게 할 브랜딩 아이디어를 나눠주세요!
+    `,
+    likes: 42,
+    comments: 5,
+    replies: [
+      {
+        id: 1101,
+        userName: "Grace",
+        time: "6 hours ago",
+        content: "슬로건은 고객에게 직관적으로 다가가야 한다고 생각해요!",
+        likes: 14,
+        comments: 0,
+      },
+    ],
+  },
 ];
