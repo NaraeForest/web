@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/subgoal-header";
 import SubGoal from "@/components/SubGoal";
-import TaskList from "@/components/tasklist";
+import TaskList from "@/components/TaskList";
 import FeedWriter from "@/components/FeedWriter";
 
 export default function SubGoalViewer() {
