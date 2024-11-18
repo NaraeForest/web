@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN npm ci
 
-RUN ["npm", "run", "build"]
+RUN npm run build
 
 FROM node:alpine 
 
