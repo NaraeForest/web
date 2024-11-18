@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import { goals } from "../data/Goals";
-import Footer from "../components/footer"; // Footer 컴포넌트 가져오기
+import { goals } from "../data/goals";
+import Footer from "../components/Footer"; // Footer 컴포넌트 가져오기
 
 const MainGoalViewer = () => {
   const router = useRouter();

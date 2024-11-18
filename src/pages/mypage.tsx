@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import MainGoal from "@/components/main-goal";
-import Footer from "@/components/footer";
-import Feed from "@/components/feed";
+import Footer from "@/components/Footer";
+import Feed from "@/components/Feed";
 import { feedData } from "@/data/feeds";
 import { useRouter } from "next/router";
 

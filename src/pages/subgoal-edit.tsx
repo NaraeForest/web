@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Header from "@/components/subgoal-header";
-import SubGoal from "@/components/subgoal";
+import SubGoal from "@/components/SubGoal";
 import TaskList from "@/components/tasklist";
-import FeedWriter from "@/components/feedwriter";
+import FeedWriter from "@/components/FeedWriter";
 
 export default function SubGoalEdit() {
   const router = useRouter();

@@ -1,4 +1,4 @@
-import SubGoal from "../components/subgoal"
+import SubGoal from "../components/SubGoal"
 import MainGoal from "../components/main-goal"
 import Link from "next/link";
 
