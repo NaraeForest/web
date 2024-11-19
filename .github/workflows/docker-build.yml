@@ -26,6 +26,11 @@ jobs:
         NEW_VERSION=$(npm version patch --no-git-tag-version | sed 's/v//')
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
         echo "Bumped version to $NEW_VERSION"
+        
+    - name: Commit local changes
+      run: |
+        git add .
+        git commit -m "chore: save local changes" || echo "No changes to commit"
 
     - name: Pull latest changes
       run: |
