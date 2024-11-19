@@ -1,25 +1,40 @@
-FROM node:alpine AS builder
+FROM node:20-alpine AS base
+
+FROM base AS deps
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+
+RUN apk add --no-cache libc6-compat
 RUN npm ci
 
-COPY . .
-RUN npm run build
-
-
-FROM node:alpine 
+FROM base AS builder
 
 WORKDIR /app
 
-ENV NODE_ENV production
-ENV HOSTNAME 0.0.0.0
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-COPY --from=builder /app/.next /app/.next
+RUN npm run build
+
+FROM base AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
 COPY --from=builder /app/public ./public
-COPY package.json package-lock.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
 
-ENTRYPOINT [ "npm", "run", "dev" ]
+CMD ["node", "server.js"]
