@@ -4,6 +4,10 @@ on:
   push:
     branches:
     - main
+    paths:
+    - 'src/**'
+    - Dockerfile
+    - 'next.config.js'
   pull_request:
     branches:
     - main
