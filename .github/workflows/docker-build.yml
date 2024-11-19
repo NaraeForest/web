@@ -10,7 +10,7 @@ on:
 
 permissions:
   packages: write
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -20,14 +20,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Upgrade Version
+    - name: Bump Version
       id: version
       run: |
-        NEW_VERSION  =$(npm version patch --no-git-tag-version)
+        NEW_VERSION=$(npm version patch --no-git-tag-version)
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        echo "Upgraded version to $NEW_VERSION"
+        echo "Bumped version to $NEW_VERSION"
 
-    - name: Commit and push version Upgrade
+    - name: Commit and push version bump
       run: |
         git config user.name "${{ github.actor }}"
         git add package.json package-lock.json
