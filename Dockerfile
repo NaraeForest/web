@@ -19,4 +19,4 @@ COPY package.json package-lock.json ./
 
 EXPOSE 3000
 
-ENTRYPOINT [ "node", "server.js" ]
+ENTRYPOINT [ "npm", "start" ]
