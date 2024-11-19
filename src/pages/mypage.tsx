@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import MainGoal from "@/components/main-goal";
-import Footer from "@/components/Footer";
-import Feed from "@/components/Feed";
-import { feedData } from "@/data/feeds";
+import MainGoal from "../components/main-goal";
+import Footer from "../components/Footer";
+import Feed from "../components/Feed";
+import { feedData } from "../data/feeds";
 import { useRouter } from "next/router";
 
 export default function MyPage() {
