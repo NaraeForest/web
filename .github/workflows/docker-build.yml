@@ -27,6 +27,12 @@ jobs:
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
         echo "Bumped version to $NEW_VERSION"
 
+    - name: Pull latest changes
+      run: |
+        git config user.name "${{ github.actor }}"
+        git config user.email "${{ github.actor }}@users.noreply.github.com"
+        git pull origin main --rebase
+
     - name: Commit and push version bump
       run: |
         git config user.name "${{ github.actor }}"
