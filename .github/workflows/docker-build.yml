@@ -39,4 +39,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/baikdk/test:latest
+        tags: ghcr.io/baikdk/05-project/test:latest
