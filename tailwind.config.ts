@@ -11,8 +11,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        naverColor: '#03C75A',
+        kakaoColor: '#FEE500',
         background: "var(--background)",
         foreground: "var(--foreground)",
+      },
+      fontFamily: {
+        pretendard: ['var(--font-pretendard)'],
       },
     },
   },

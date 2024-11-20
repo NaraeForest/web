@@ -1,3 +1,5 @@
+import axios from '@/axios';
+import Image from 'next/image';
 import React, {
   useEffect,
   useState,
@@ -7,47 +9,47 @@ export default function LoginPage() {
   const [csrf, setCsrf] = useState<string>();
   useEffect(() => {
     (async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/csrf/token`, { credentials: "include" });
-      const data = await res.json();
+      const { data } = await axios.get(`/api/csrf/token`);
       if (data.token != null) {
         setCsrf(data.token);
       }
     })();
   }, []);
-  // if (csrf == null) {
-  //   return (<div />);
-  // }
-  // test 주석
+  if (csrf == null) {
+    return (<div />);
+  }
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm text-center">
-        <h1 className="text-4xl font-bold mb-6">05</h1>
-        <h2 className="text-2xl font-semibold mb-4">Welcome back</h2>
-        <p className="text-gray-500 mb-8">Log in to your account to continue planning your goals</p>
+    <div className='w-screen h-screen relative'>
+      <div className='absolute -translate-y-1/2 top-1/2 -translate-x-1/2 left-1/2 w-full max-w-96'>
+        <div className='flex flex-col items-center mx-5 border pt-3'>
+          <Image src="/logo.svg" width={96} height={96} alt="05-project's logo" />
+          <p className='text-[#333333] text-2xl font-bold'>Welcome back</p>
+          <p className='text-[#71717A] text-xs mt-2 text-center mx-4'>Log in to your account to continue planning your goals</p>
 
-        <a
-          href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL}&state=${csrf}&scope=${"profile email"}`}
-          className="w-full flex items-center justify-center mb-4 p-3 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
-        >
-          <img src="/google.svg" alt="Google Logo" className="w-6 h-6 mr-3" />
-          <span>Continue with Google</span>
-        </a>
-
-        <a
-          href={`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_NAVER_REDIRECT_URL}&state=${csrf}`}
-          className="w-full flex items-center justify-center mb-4 p-3 bg-naverColor text-white rounded-md shadow-sm hover:bg-green-600"
-        >
-          <img src="/naver.svg" alt="Naver Logo" className="w-6 h-6 mr-3" />
-          <span>Continue with Naver</span>
-        </a>
-
-        <a
-          href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL}&state=${csrf}`}
-          className="w-full flex items-center justify-center p-3 bg-kakaoColor text-black rounded-md shadow-sm hover:bg-yellow-500"
-        >
-          <img src="/kakao.svg" alt="Kakao Logo" className="w-6 h-6 mr-3" />
-          <span>Continue with Kakao</span>
-        </a>
+          <div className='my-9 px-3 w-full'>
+            <a
+              href={`https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URL}&state=${csrf}&scope=${"profile email"}`}
+              className="w-full flex items-center justify-center h-10 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+            >
+              <Image src="/google.svg" alt="Google Logo" width={18} height={18} />
+              <span className='ml-2 text-[#333333] font-medium'>Continue with Google</span>
+            </a>
+            <a
+              href={`https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_NAVER_REDIRECT_URL}&state=${csrf}`}
+              className="w-full flex items-center justify-center h-10 mt-2 bg-naverColor rounded-md shadow-sm hover:bg-green-600"
+            >
+              <Image src="/naver.svg" alt="Naver Logo" width={16} height={16} />
+              <span className='ml-2'>Continue with Naver</span>
+            </a>
+            <a
+              href={`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URL}&state=${csrf}`}
+              className="w-full flex items-center justify-center h-10 mt-2 bg-kakaoColor rounded-md shadow-sm hover:bg-yellow-500"
+            >
+              <Image src="/kakao.svg" alt="Kakao Logo" width={22} height={20} />
+              <span className='ml-2 text-[#333333] font-medium'>Continue with Kakao</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
