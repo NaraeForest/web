@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import Swiper from "swiper";
-import axios from "@/axios";
 import {
   Navigation,
   Pagination,
