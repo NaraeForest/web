@@ -10,6 +10,7 @@ import {
 import {
   addGoal,
 } from "@/actions";
+import { categories } from "@/utils";
 
 type IProps = {
   isOpen: boolean,
@@ -24,7 +25,6 @@ export function SetupGoalDialog({ isOpen, onClose, onComplete }: IProps) {
   const { handleSubmit, register } = useForm<GoalForm>();
   const onSubmit: SubmitHandler<GoalForm> = async (body) => {
     const { success, data } = await addGoal(body.name, body.category);
-
     onClose(true);
     onComplete();
   };
@@ -38,9 +38,9 @@ export function SetupGoalDialog({ isOpen, onClose, onComplete }: IProps) {
 
           <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
             <select className="w-40" {...register("category", { required: true })}>
-              <option value={"sports"}>운동</option>
-              <option value={"sports"}>치킨</option>
-              <option value={"sports"}>치킨</option>
+              {Object.keys(categories).map((key) => (
+                <option value={(categories as any)[key]}>{key}</option>
+              ))}
             </select>
             <input placeholder="Enter goal" className="border-b text-xl mt-2" {...register("name", { required: true })} />
             <input type="submit" value={"send"} />

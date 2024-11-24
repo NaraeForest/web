@@ -1,6 +1,7 @@
 import {
   updateGoal,
 } from "@/actions";
+import { categories } from "@/utils";
 import {
   SubmitHandler,
   useForm,
@@ -32,9 +33,9 @@ export function EditGoal({
   return (
     <form id="edit-goal" className="flex flex-col mx-5" onSubmit={handleSubmit(onSubmit)}>
       <select className="w-40" {...register("category", { required: true })}>
-        <option value={"sports"}>운동</option>
-        <option value={"chicken"}>치킨</option>
-        <option value={"nothing"}>치킨</option>
+        {Object.keys(categories).map((key) => (
+          <option value={(categories as any)[key]}>{key}</option>
+        ))}
       </select>
       <input placeholder="Enter goal" className="border-b text-xl mt-2" {...register("name", { required: true })} />
     </form>

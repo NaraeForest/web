@@ -4,6 +4,7 @@ import {
 } from "next/router";
 import {
   Fragment,
+  MouseEvent,
   ReactElement,
   useCallback,
   useEffect,
@@ -21,25 +22,28 @@ import {
 import {
   getGoal,
 } from "@/actions";
+import {
+  GetServerSideProps,
+} from "next";
 
-export default function NewGoalPage() {
+export default function NewGoalPage({ goalId }: PageProps) {
   const [subGoals, setSubGoals] = useState<ReactElement[]>([]);
   const router = useRouter();
   const goBack = useCallback(() => {
     router.back();
   }, []);
   const [isEditGoal, setEditGoal] = useState<boolean>(false);
-  const editGoal = useCallback(() => {
+  const editGoal = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setEditGoal(true);
   }, []);
   const [goal, setGoal] = useState<any>(null);
   useEffect(() => {
     (async () => {
-      const goalId = router.query.goal_id as string;
-      const { data } = await getGoal(parseInt(goalId, 10));
+      const { data } = await getGoal(goalId);
       setGoal(data);
     })();
-  }, []);
+  }, [goalId]);
   useEffect(() => {
     if (goal == null) {
       return;
@@ -67,8 +71,7 @@ export default function NewGoalPage() {
   }, [goal]);
   const onCompleteUpdateGoal = useCallback(() => {
     (async () => {
-      const goalId = router.query.goal_id as string;
-      const { data } = await getGoal(parseInt(goalId, 10));
+      const { data } = await getGoal(goalId);
       setGoal(data);
       setEditGoal(false);
     })();
@@ -116,3 +119,15 @@ export default function NewGoalPage() {
     </div>
   );
 }
+
+type PageProps = {
+  goalId: number,
+}
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const { goal_id } = context.params!;
+  return {
+    props: {
+      goalId: parseInt(goal_id as string, 10),
+    },
+  };
+};

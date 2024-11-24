@@ -12,10 +12,11 @@ type EditSubGoalForm = {
 type EditSubGoalProps = {
   goalId: number,
   subGoalId: number,
+  subGoalName: string,
   onComplete: () => void,
 }
-export function EditSubGoal({ goalId, subGoalId, onComplete }: EditSubGoalProps) {
-  const { handleSubmit, register } = useForm<EditSubGoalForm>();
+export function EditSubGoal({ goalId, subGoalId, subGoalName, onComplete }: EditSubGoalProps) {
+  const { handleSubmit, register } = useForm<EditSubGoalForm>({ defaultValues: { name: subGoalName } });
   const onSubmit: SubmitHandler<EditSubGoalForm> = async (body) => {
     const { success } = await updateSubGoal(goalId, subGoalId, body.name);
     if (success) {
@@ -29,7 +30,7 @@ export function EditSubGoal({ goalId, subGoalId, onComplete }: EditSubGoalProps)
     >
       <input
         {...register("name", { required: true })}
-        className="h-9 w-full text-2xl"
+        className="h-9 w-full text-2xl border-b"
         type="text"
       />
     </form>

@@ -1,19 +1,57 @@
 import {
+  getFeeds,
+  toogleLikeFeed,
+} from "@/actions";
+import {
   BattomNavigationBar,
 } from "@/components/bottom-navigation-bar";
+import {
+  categories,
+  shareFeed,
+  useProfile,
+} from "@/utils";
+import dayjs from "dayjs";
 import Image from "next/image";
-
-const categories = {
-  "All": "all",
-  "Sports": "sports",
-  "Sports1": "sports1",
-  "Sports2": "sports2",
-  "Sports3": "sports3",
-  "Sports4": "sports4",
-  "Sports5": "sports5",
-};
+import Link from "next/link";
+import {
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 export default function FeedPage() {
+  const profile = useProfile();
+  const [category, setCategory] = useState("all");
+  const onCategoryClick = useCallback((cate: string) => (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setCategory(cate);
+  }, []);
+  const [feeds, setFeeds] = useState<any[]>([]);
+  const [isFetching,] = useScrollHook(async () => {
+    const lastItem = feeds[feeds.length - 1].id;
+    const { data } = await getFeeds(category, lastItem);
+    setFeeds([...feeds, ...data]);
+  });
+  useEffect(() => {
+    (async () => {
+      const { data } = await getFeeds(category);
+      setFeeds([...data]);
+    })();
+  }, [category]);
+  const onFeedLikeClick = (feedId: number) => async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const { data } = await toogleLikeFeed(feedId);
+    const idx = feeds.findIndex((feed) => feed.id === feedId);
+    if (idx == -1) {
+      return;
+    }
+    feeds[idx].likes = data;
+    setFeeds([...feeds]);
+  };
+  if (profile == null) {
+    return (<div />);
+  }
   return (
     <div>
       <div className="mx-5 mt-16 mb-3">
@@ -22,187 +60,134 @@ export default function FeedPage() {
         </div>
       </div>
       <div className="flex gap-2 mx-5 overflow-y-scroll">
-        {Object.values(categories).map((category) => (
-          <div key={category} className="text-[#333333] text-[0.625rem] leading-[0.625rem] text-center py-[6px] px-2 border rounded-full border-[#E5E7EB] min-w-12">
-            {category}
-          </div>
-        ))}
+
+        <button
+          onClick={onCategoryClick("all")}
+          className={`text-[#333333] text-[0.625rem] leading-[0.625rem] text-center py-[6px] px-2 border rounded-full border-[#E5E7EB] ${category === "all" ? "font-semibold border-black" : ""}`}
+        >
+          All
+        </button>
+        {Object.keys(categories).map((key, i) => {
+          const cate = (categories as { [key: string]: string })[key];
+          return (
+            <button
+              onClick={onCategoryClick(cate)}
+              key={i}
+              className={`text-[#333333] break-keep whitespace-nowrap text-[0.625rem] leading-[0.625rem] text-center py-[6px] px-2 border rounded-full border-[#E5E7EB] ${category === cate ? "font-semibold border-black" : ""}`}
+            >
+              {key}
+            </button>
+          )
+        })}
       </div>
       <div className="p-5 flex flex-col gap-5  mb-16">
-
-        <div className="border border-[#E5E7EB] rounded-lg p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <Image src="" alt="" width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col">
-                <p className="text-[#333333] text-sm">Jacob Lee</p>
-                <p className="text-[#71717A] text-[0.625rem]">1 hours ago</p>
-              </div>
+        {feeds.map((feed) => (
+          <div
+            key={feed.id}
+            className="border border-[#E5E7EB] rounded-lg p-4"
+          >
+            <div className="flex justify-between items-center">
+              <Link
+                href={`/users/${feed.user.id}`}
+                className="flex gap-3"
+              >
+                <Image src={feed.user.profileImage} alt="" width={40} height={40} className="rounded-full" />
+                <div className="flex flex-col">
+                  <p className="text-[#333333] text-sm">{feed.user.nickname}</p>
+                  <p className="text-[#71717A] text-[0.625rem]">{dayjs(feed.createdAt).fromNow()}</p>
+                </div>
+              </Link>
+              <button>
+                <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
+              </button>
             </div>
-            <button>
-              <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-            </button>
+            <Link href={`/feeds/${feed.id}`} className="pl-[3.25rem] text-xs text-[#333333] whitespace-pre-wrap">
+              {feed.content}
+            </Link>
+            {feed.image != null && <img
+              className="my-4 rounded w-full"
+              src={`${feed.image}`}
+              alt=""
+            />}
+            <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
+              <button
+                className="flex items-center gap-2"
+                onClick={onFeedLikeClick(feed.id)}
+              >
+                <Image
+                  alt="heart full"
+                  src={feed.likes.findIndex((val: any) => val.user.id === profile.id)
+                    ? "/heart-line.svg"
+                    : "/heart-full.svg"}
+                  width={16}
+                  height={16}
+                />
+                {feed.likes.length} Likes
+              </button>
+              <Link href={`/feeds/${feed.id}`} className="flex items-center gap-2">
+                <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
+                {feed.childs.length} Comments
+              </Link>
+              <button
+                onClick={shareFeed(feed.id, feed.user.nickname, feed.content)}
+                className="flex items-center gap-2">
+                <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
+                Share
+              </button>
+            </div>
           </div>
-          <div className="text-xs text-[#333333]">
-            고추참치 고추참치 참치 참치 고추참치
-            고추참치 고추참치 참치 참치 고추참치
-          </div>
-          <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-            <div className="flex items-center gap-2">
-              <Image alt="heart full" src={"/heart-full.svg"} width={16} height={16} />
-              Likes
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-              Comments
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-              Share
-            </div>
-
-          </div>
+        ))}
+        <div className={`${isFetching ? 'visibility' : 'invisible'}`}>
+          로딩중...
         </div>
-
-        <div className="border border-[#E5E7EB] rounded-lg p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <Image src="" alt="" width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col">
-                <p className="text-[#333333] text-sm">Jacob Lee</p>
-                <p className="text-[#71717A] text-[0.625rem]">1 hours ago</p>
-              </div>
-            </div>
-            <button>
-              <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-            </button>
-          </div>
-          <div className="text-xs text-[#333333]">
-            고추참치 고추참치 참치 참치 고추참치
-            고추참치 고추참치 참치 참치 고추참치
-          </div>
-          <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-            <div className="flex items-center gap-2">
-              <Image alt="heart full" src={"/heart-full.svg"} width={16} height={16} />
-              Likes
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-              Comments
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-              Share
-            </div>
-
-          </div>
-        </div>
-
-        <div className="border border-[#E5E7EB] rounded-lg p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <Image src="" alt="" width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col">
-                <p className="text-[#333333] text-sm">Jacob Lee</p>
-                <p className="text-[#71717A] text-[0.625rem]">1 hours ago</p>
-              </div>
-            </div>
-            <button>
-              <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-            </button>
-          </div>
-          <div className="text-xs text-[#333333]">
-            고추참치 고추참치 참치 참치 고추참치
-            고추참치 고추참치 참치 참치 고추참치
-          </div>
-          <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-            <div className="flex items-center gap-2">
-              <Image alt="heart full" src={"/heart-full.svg"} width={16} height={16} />
-              Likes
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-              Comments
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-              Share
-            </div>
-
-          </div>
-        </div>
-
-        <div className="border border-[#E5E7EB] rounded-lg p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <Image src="" alt="" width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col">
-                <p className="text-[#333333] text-sm">Jacob Lee</p>
-                <p className="text-[#71717A] text-[0.625rem]">1 hours ago</p>
-              </div>
-            </div>
-            <button>
-              <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-            </button>
-          </div>
-          <div className="text-xs text-[#333333]">
-            고추참치 고추참치 참치 참치 고추참치
-            고추참치 고추참치 참치 참치 고추참치
-          </div>
-          <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-            <div className="flex items-center gap-2">
-              <Image alt="heart full" src={"/heart-full.svg"} width={16} height={16} />
-              Likes
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-              Comments
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-              Share
-            </div>
-
-          </div>
-        </div>
-
-        <div className="border border-[#E5E7EB] rounded-lg p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <Image src="" alt="" width={40} height={40} className="rounded-full" />
-              <div className="flex flex-col">
-                <p className="text-[#333333] text-sm">Jacob Lee</p>
-                <p className="text-[#71717A] text-[0.625rem]">1 hours ago</p>
-              </div>
-            </div>
-            <button>
-              <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-            </button>
-          </div>
-          <div className="text-xs text-[#333333]">
-            고추참치 고추참치 참치 참치 고추참치
-            고추참치 고추참치 참치 참치 고추참치
-          </div>
-          <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-            <div className="flex items-center gap-2">
-              <Image alt="heart full" src={"/heart-full.svg"} width={16} height={16} />
-              Likes
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-              Comments
-            </div>
-            <div className="flex items-center gap-2">
-              <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-              Share
-            </div>
-
-          </div>
-        </div>
-
       </div>
-
       <BattomNavigationBar />
     </div>
   );
 }
+
+export const getScrollHeight = () => {
+  const scrollHeight = Math.max(
+    document.body.scrollHeight,
+    document.documentElement.scrollHeight,
+    document.body.offsetHeight,
+    document.documentElement.offsetHeight,
+    document.body.clientHeight,
+    document.documentElement.clientHeight,
+  );
+  return scrollHeight;
+}
+
+export const useScrollHook = (callback: () => Promise<void>) => {
+  const [isFetching, setFetching] = useState(false);
+
+  const onScroll = () => {
+    const scrollHeight = getScrollHeight();
+    const currentScroll = window.innerHeight + document.documentElement.scrollTop;
+    if (scrollHeight === currentScroll && !isFetching) {
+      setFetching(true);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+  useEffect(() => {
+    if (isFetching) {
+      callback().then(() => {
+        setTimeout(() => {
+          setFetching(false);
+          const scrollAdjustment = 50;
+          const newScrollTop = document.documentElement.scrollTop - scrollAdjustment;
+          window.scrollTo({
+            top: newScrollTop > 0 ? newScrollTop : 0,
+            behavior: "smooth",
+          });
+        }, 2000);
+      });
+    }
+  }, [isFetching]);
+  return [isFetching, setFetching];
+};
