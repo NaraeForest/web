@@ -1,8 +1,13 @@
 import localFont from 'next/font/local'
+import dayjs from 'dayjs';
+import relativeTime from "dayjs/plugin/relativeTime";
 import "@/styles/globals.css";
 import type {
   AppProps,
 } from "next/app";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ko");
 
 const pretendard = localFont({
   src: "../font/pretendard-variable.woff2",

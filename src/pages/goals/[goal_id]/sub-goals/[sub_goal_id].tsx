@@ -3,11 +3,11 @@ import {
   useRouter,
 } from "next/router";
 import React, {
+  MouseEvent,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import axios from "@/axios";
 import {
   AddTaskForm,
 } from "@/components/add-task-form";
@@ -20,21 +20,30 @@ import {
 import {
   Task,
 } from "@/components/task";
+import {
+  AddGoalFeed,
+} from "@/components/add-goal-feed";
+import {
+  GetServerSideProps,
+} from "next";
+import {
+  useProfile,
+} from "@/utils";
 
-export default function SubGoalPage() {
+export default function SubGoalPage({ goalId, subGoalId }: PageProps) {
+  const profile = useProfile();
   const router = useRouter();
   const goBack = useCallback(() => {
     router.back();
   }, []);
   const [isSubEdit, setIsSubEdit] = useState<boolean>(false);
-  const editSubGoal = useCallback(() => {
+  const editSubGoal = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsSubEdit(true);
   }, []);
   const [subGoal, setSubGoal] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>([]);
   useEffect(() => {
-    const goalId = parseInt(router.query.goal_id as string, 10);
-    const subGoalId = parseInt(router.query.sub_goal_id as string, 10);
     (async () => {
       const { data } = await getSubGoal(goalId, subGoalId);
       setSubGoal(data);
@@ -43,23 +52,21 @@ export default function SubGoalPage() {
   }, []);
   const reloadSubGoal = useCallback(() => {
     (async () => {
-      const goalId = parseInt(router.query.goal_id as string, 10);
-      const subGoalId = parseInt(router.query.sub_goal_id as string, 10);
       const { data } = await getSubGoal(goalId, subGoalId);
       setSubGoal(data);
-      console.log(data);
       setTasks(data.tasks);
     })()
   }, []);
   const onSubGoalUpdated = useCallback(() => {
-    const goalId = parseInt(router.query.goal_id as string, 10);
-    const subGoalId = parseInt(router.query.sub_goal_id as string, 10);
     (async () => {
       const { data } = await getSubGoal(goalId, subGoalId);
       setSubGoal(data);
       setIsSubEdit(false);
       setTasks(data.tasks);
     })();
+  }, []);
+  const onComplete = useCallback((feedId: number) => {
+    router.push(`/feeds/${feedId}`);
   }, []);
 
   if (subGoal == null) {
@@ -81,6 +88,7 @@ export default function SubGoalPage() {
             {
               isSubEdit ?
                 <EditSubGoal
+                  subGoalName={subGoal.name}
                   onComplete={onSubGoalUpdated}
                   goalId={subGoal.goal.id}
                   subGoalId={subGoal.id}
@@ -88,14 +96,14 @@ export default function SubGoalPage() {
                 :
                 <p className="h-9 w-full text-2xl">{subGoal.name}</p>
             }
-            {isSubEdit ?
+            {profile.id === subGoal.goal.user.id && <> {isSubEdit ?
               <button type="submit" className="text-[#333333] text-xs font-semibold absolute right-0 top-2" form="edit-sub-goal">
                 save
               </button> :
               <button type="button" onClick={editSubGoal}>
                 <Image src={"/pencil.svg"} width={24} height={24} alt="edit goal" />
               </button>
-            }
+            }</>}
           </div>
           <div className="pt-4">
             <div className="w-full rounded-full h-5 bg-[#F4F4F5]">
@@ -107,7 +115,7 @@ export default function SubGoalPage() {
         <div>
           <h2 className="py-5 text-2xl text-[#333]">Task</h2>
           <ul>
-            {tasks.map((task: any) => (
+            {profile.id === subGoal.goal.user.id ? tasks.map((task: any) => (
               <Task
                 key={task.id}
                 goalId={subGoal.goal.id}
@@ -118,29 +126,53 @@ export default function SubGoalPage() {
                 onComplete={onSubGoalUpdated}
                 onRemoved={reloadSubGoal}
               />
+            )) : tasks.map((task: any) => (
+              <li
+                className="flex justify-between items-center"
+              >
+                <label
+                  className="flex gap-2"
+                >
+                  <input
+                    className="w-4 h-4 checked:accent-[#333]"
+                    type="checkbox"
+                    checked={task.complete} />
+                  <span
+                    className="text-xs font-semibold text-[#333]"
+                  >
+                    {task.name}
+                  </span>
+                </label>
+              </li>
             ))}
           </ul>
         </div>
-        <AddTaskForm
-          goalId={subGoal.goal.id}
-          subGoalId={subGoal.id}
-          onCreated={reloadSubGoal}
-        />
-        <form>
-          <div className="pt-4 pb-1">
-            <textarea className="h-32 w-full p-3 rounded border border-[#E5E7EB]" placeholder="What's happening in your goals" />
-          </div>
-          <div className="flex justify-between items-center">
-            <label>
-              <Image src={"/photo.svg"} width={16} height={16} alt="add task" />
-              <input className="hidden" type="file" />
-            </label>
-            <button type="submit" className="bg-[#333] text-xs rounded-lg px-4 py-2 text-white font-semibold">
-              Send
-            </button>
-          </div>
-        </form>
+        {profile.id === subGoal.goal.user.id && <>
+          <AddTaskForm
+            goalId={subGoal.goal.id}
+            subGoalId={subGoal.id}
+            onCreated={reloadSubGoal}
+          />
+          <AddGoalFeed
+            subGoalId={subGoal.id}
+            onComplete={onComplete}
+          />
+        </>}
       </div>
     </div>
   )
 }
+
+type PageProps = {
+  goalId: number,
+  subGoalId: number,
+}
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const { goal_id, sub_goal_id } = context.params!;
+  return {
+    props: {
+      goalId: parseInt(goal_id as string, 10),
+      subGoalId: parseInt(sub_goal_id as string, 10),
+    },
+  };
+};

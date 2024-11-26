@@ -16,11 +16,12 @@ type TaskForm = {
   name: string,
 };
 export function AddTaskForm({ goalId, subGoalId, onCreated }: AddTaskFormProps) {
-  const { register, handleSubmit } = useForm<TaskForm>();
+  const { register, handleSubmit, reset, } = useForm<TaskForm>();
   const onSubmit: SubmitHandler<TaskForm> = async (body) => {
     const { success } = await addTask(goalId, subGoalId, body.name);
     if (success) {
       onCreated();
+      reset()
     }
   };
   return (
