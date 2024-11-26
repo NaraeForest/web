@@ -79,3 +79,8 @@ export const deleteTask = async (goalId: number, subGoalId: number, taskId: numb
   const { data } = await axios.delete(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks/${taskId}`);
   return data;
 };
+
+export const getUserGoals = async (userId: number) => {
+  const { data } = await axios.get(`/api/v1/users/${userId}/goals`);
+  return data;
+};

@@ -39,3 +39,12 @@ export const toogleLikeFeed = async (feedId: number) => {
   const { data } = await axios.patch(`/api/v1/feeds/${feedId}/likes`);
   return data;
 };
+
+export const getUserFeeds = async (userId: number, startFeedId?: number) => {
+  const search = new URLSearchParams();
+  if (startFeedId != null) {
+    search.append("startFeedId", startFeedId.toString());
+  }
+  const { data } = await axios.get(`/api/v1/users/${userId}/feeds?${search.toString()}`);
+  return data;
+};

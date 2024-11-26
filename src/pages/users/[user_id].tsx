@@ -5,6 +5,12 @@ import {
   BattomNavigationBar,
 } from "@/components/bottom-navigation-bar";
 import {
+  UserFeedList,
+} from "@/components/user-feed-list";
+import {
+  UserGoalList,
+} from "@/components/user-goal-list";
+import {
   Tab,
   TabGroup,
   TabList,
@@ -29,7 +35,6 @@ export default function UserPage({ userId }: PageProps) {
   const goBack = useCallback(() => {
     router.back();
   }, []);
-  const [feed, setFeed] = useState<any>(null);
   const [profile, setProfile] = useState<any>();
   useEffect(() => {
     (async () => {
@@ -75,11 +80,10 @@ export default function UserPage({ userId }: PageProps) {
           {profile.bio}
         </p>
       </div>
-
       <TabGroup
         className={"m-5 mb-16"}
       >
-        <TabList className={"flex gap-3"}>
+        <TabList className={"flex gap-3 pb-4"}>
           <Tab className={"text-[#333333] data-[selected]:border-b-2 border-[#333333]"}>
             Goals
           </Tab>
@@ -89,10 +93,14 @@ export default function UserPage({ userId }: PageProps) {
         </TabList>
         <TabPanels>
           <TabPanel>
-            asdfasd
+            <UserGoalList
+              userId={profile.id}
+            />
           </TabPanel>
           <TabPanel>
-            asdfasd
+            <UserFeedList
+              userId={profile.id}
+            />
           </TabPanel>
         </TabPanels>
       </TabGroup>

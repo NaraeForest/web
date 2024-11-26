@@ -19,6 +19,12 @@ import {
   useEffect,
   useState,
 } from "react";
+import {
+  UserFeedList,
+} from "@/components/user-feed-list";
+import {
+  UserGoalList,
+} from "@/components/user-goal-list";
 
 export default function MyPage() {
   const [profile, setProfile] = useState<any>(null);
@@ -34,6 +40,7 @@ export default function MyPage() {
       setProfile(data);
     })();
   };
+
   if (profile == null) {
     return (<div />)
   }
@@ -56,9 +63,8 @@ export default function MyPage() {
           {profile.bio}
         </p>
       </div>
-
       <TabGroup className={"m-5 mb-16"}>
-        <TabList className={"flex gap-3"}>
+        <TabList className={"flex gap-3 pb-4"}>
           <Tab className={"text-[#333333] data-[selected]:border-b-2 border-[#333333]"}>
             Goals
           </Tab>
@@ -68,14 +74,17 @@ export default function MyPage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            asdfasd
+            <UserGoalList
+              userId={profile.id}
+            />
           </TabPanel>
           <TabPanel>
-            asdfasd
+            <UserFeedList
+              userId={profile.id}
+            />
           </TabPanel>
         </TabPanels>
       </TabGroup>
-
       <BattomNavigationBar />
     </div>
   )

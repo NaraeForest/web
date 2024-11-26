@@ -25,8 +25,12 @@ import {
 import {
   GetServerSideProps,
 } from "next";
+import {
+  useProfile,
+} from "@/utils";
 
 export default function NewGoalPage({ goalId }: PageProps) {
+  const profile = useProfile();
   const [subGoals, setSubGoals] = useState<ReactElement[]>([]);
   const router = useRouter();
   const goBack = useCallback(() => {
@@ -58,8 +62,11 @@ export default function NewGoalPage({ goalId }: PageProps) {
         name={subGoal.name}
       />)
     });
-    if (goal.subGoals.length < 8) {
+    if (goal.subGoals.length < 8 && goal.user.id === profile.id) {
       items.splice(goal.subGoals.length, 0, <AddSubGoal goalId={goal.id} />);
+    }
+    if (goal.subGoals.length < 8 && goal.user.id !== profile.id) {
+      items.push(<div className="bg-[#F4F4F5] rounded-lg relative max-w-32 max-h-32 w-full h-full aspect-square" />);
     }
     items.splice(4, 0, <div className="bg-[#333333] rounded-lg relative max-w-32 max-h-32 w-full h-full aspect-square">
       <p className="pl-2 pt-2 text-white">Main goal</p>
@@ -68,7 +75,7 @@ export default function NewGoalPage({ goalId }: PageProps) {
       </p>
     </div>);
     setSubGoals(items);
-  }, [goal]);
+  }, [goal, profile]);
   const onCompleteUpdateGoal = useCallback(() => {
     (async () => {
       const { data } = await getGoal(goalId);
@@ -76,7 +83,7 @@ export default function NewGoalPage({ goalId }: PageProps) {
       setEditGoal(false);
     })();
   }, []);
-  if (goal == null) {
+  if (goal == null || profile == null) {
     return (<div>loading goals...</div>);
   }
   return (
@@ -88,14 +95,15 @@ export default function NewGoalPage({ goalId }: PageProps) {
           </button>
           <h1 className="text-[#333333] text-2xl font-medium ml-4">{goal.name}</h1>
         </div>
-        {isEditGoal ?
-          <button type="submit" className="text-[#333333] text-xs font-semibold" form="edit-goal">
-            save
-          </button> :
-          <button type="button" onClick={editGoal}>
-            <Image src={"/pencil.svg"} width={24} height={24} alt="edit goal" />
-          </button>
-        }
+        {profile.id === goal.user.id && <>
+          {isEditGoal ?
+            <button type="submit" className="text-[#333333] text-xs font-semibold" form="edit-goal">
+              save
+            </button> :
+            <button type="button" onClick={editGoal}>
+              <Image src={"/pencil.svg"} width={24} height={24} alt="edit goal" />
+            </button>}
+        </>}
       </div>
       {isEditGoal ? <EditGoal
         onComplete={onCompleteUpdateGoal}
