@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -22,7 +22,10 @@ instance.interceptors.response.use(
     if (error.response && error.response.status) {
       if (error.response.status === 401) {
         try {
-          const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reissue`, null, { withCredentials: true });
+          const config: AxiosRequestConfig = {
+            withCredentials: true,
+          };
+          const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reissue`, null, config);
           if (result.status == 200 || result.status == 201) {
             return instance(error.config);
           }
