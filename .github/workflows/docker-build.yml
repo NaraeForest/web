@@ -25,6 +25,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Create Enviroments
+      run: |
+        echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env.production
+        echo "NEXT_PUBLIC_NAVER_CLIENT_ID=${{ secrets.NEXT_PUBLIC_NAVER_CLIENT_ID }}" >> .env.production
+        echo "NEXT_PUBLIC_NAVER_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_NAVER_REDIRECT_URL }}" >> .env.production
+        echo "NEXT_PUBLIC_KAKAO_CLIENT_ID=${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}" >> .env.production
+        echo "NEXT_PUBLIC_KAKAO_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_KAKAO_REDIRECT_URL }}" >> .env.production
+        echo "NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}" >> .env.production
+        echo "NEXT_PUBLIC_GOOGLE_REDIRECT_URL=${{ secrets.NEXT_PUBLIC_GOOGLE_REDIRECT_URL }}" >> .env.production
+
     - name: Set up version tag
       id: version
       run: |

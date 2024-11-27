@@ -28,7 +28,6 @@ instance.interceptors.response.use(
           }
         } catch (e) {
           window.location.href = "/login";
-          // return Promise.reject(error);
         }
       }
       if (error.response && error.response.status >= 400 && error.response.status < 500) {
