@@ -80,7 +80,7 @@ export default function FeedPage() {
           )
         })}
       </div>
-      <div className="p-5 flex flex-col gap-5  mb-16">
+      <div className="p-5 flex flex-col gap-5 mb-16">
         {feeds.map((feed) => (
           <div
             key={feed.id}
