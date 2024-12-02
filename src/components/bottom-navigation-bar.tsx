@@ -7,8 +7,8 @@ import {
 export function BattomNavigationBar() {
   const router = useRouter();
   return (
-    <div className="fixed bottom-0 w-full safe-area">
-      <div className="h-16 border-t border-[#D9D9D9] flex justify-evenly items-center text-[0.625rem] bg-white z-50">
+    <div className="fixed bottom-0 w-full safe-area bg-white">
+      <div className="h-16 border-t border-[#D9D9D9] flex justify-evenly items-center text-[0.625rem] z-50">
         <Link href={"/"} className="flex flex-col items-center">
           <Image
             src={router.pathname === "/" ? "/home-full.svg" : "/home-line.svg"}
