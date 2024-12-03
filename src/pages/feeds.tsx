@@ -163,7 +163,7 @@ export const useScrollHook = (callback: () => Promise<void>) => {
 
   const onScroll = () => {
     const scrollHeight = getScrollHeight();
-    const currentScroll = window.innerHeight + document.documentElement.scrollTop;
+    const currentScroll = Math.ceil(window.innerHeight + document.documentElement.scrollTop);
     if (scrollHeight === currentScroll && !isFetching) {
       setFetching(true);
     }
@@ -175,6 +175,7 @@ export const useScrollHook = (callback: () => Promise<void>) => {
     };
   }, []);
   useEffect(() => {
+    console.log("SADf")
     if (isFetching) {
       callback().then(() => {
         setTimeout(() => {
