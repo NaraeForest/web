@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import Swiper from "swiper";
@@ -23,7 +24,7 @@ import {
   getGoals,
 } from "@/actions";
 
-export default function Home() {
+export default function Page() {
   const [goals, setGoals] = useState<any[]>([]);
   const [isSetupGoalOpen, setSetupGoalOpen] = useState<boolean>(false);
   const openSetupGoal = useCallback(() => {
@@ -98,7 +99,6 @@ export default function Home() {
         <div className="swiper-pagination" />
       </div>
       <SetupGoalDialog isOpen={isSetupGoalOpen} onClose={closeSetupGoal} onComplete={complete} />
-      <BattomNavigationBar />
     </div>
   );
 }

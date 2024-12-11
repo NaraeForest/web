@@ -1,3 +1,5 @@
+"use client";
+
 import axios from '@/axios';
 import Image from 'next/image';
 import React, {
@@ -5,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 
-export default function LoginPage() {
+export default function Page() {
   const [csrf, setCsrf] = useState<string>();
   useEffect(() => {
     (async () => {
@@ -19,6 +21,7 @@ export default function LoginPage() {
     return (<div />);
   }
   return (
+
     <div className='w-screen h-screen relative'>
       <div className='absolute -translate-y-1/2 top-1/2 -translate-x-1/2 left-1/2 w-full max-w-96'>
         <div className='flex flex-col items-center mx-5 border pt-3'>

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import {
   getFeed,
@@ -25,10 +26,12 @@ import {
   useProfile,
 } from "@/utils";
 
-type FeedDetailPageProps = {
-  feedId: number,
+type PageProps = {
+  params: {
+    feedId: number,
+  },
 }
-export default function FeedDetailPage({ feedId }: FeedDetailPageProps) {
+export default function Page({ params: { feedId } }: PageProps) {
   const profile = useProfile();
   const router = useRouter();
   const [feed, setFeed] = useState<any>(null);
@@ -206,15 +209,6 @@ export default function FeedDetailPage({ feedId }: FeedDetailPageProps) {
           onComplete={onComplete}
         />
       </div>
-    </div >
+    </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { feed_id } = context.params!; // params에서 id를 추출
-  return {
-    props: {
-      feedId: parseInt(feed_id as string, 10),
-    },
-  };
-};

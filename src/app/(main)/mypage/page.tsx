@@ -1,3 +1,5 @@
+"use client";
+
 import {
   getMyProfile,
 } from "@/actions";
@@ -26,7 +28,7 @@ import {
   UserGoalList,
 } from "@/components/user-goal-list";
 
-export default function MyPage() {
+export default function Page() {
   const [profile, setProfile] = useState<any>(null);
   useEffect(() => {
     (async () => {
@@ -85,7 +87,6 @@ export default function MyPage() {
           </TabPanel>
         </TabPanels>
       </TabGroup>
-      <BattomNavigationBar />
     </div>
-  )
+  );
 }

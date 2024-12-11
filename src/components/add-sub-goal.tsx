@@ -15,7 +15,7 @@ import {
 } from "react-hook-form";
 import {
   useRouter,
-} from "next/router";
+} from "next/navigation";
 import {
   addSubGoal,
 } from "@/actions";

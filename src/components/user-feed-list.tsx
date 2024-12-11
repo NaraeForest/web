@@ -6,10 +6,8 @@ import {
   toogleLikeFeed,
 } from "@/actions";
 import {
-  useScrollHook,
-} from "@/pages/feeds";
-import {
   shareFeed,
+  useScrollHook,
 } from "@/utils";
 import {
   MouseEvent,

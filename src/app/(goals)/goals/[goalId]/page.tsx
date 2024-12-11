@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
 import {
   useRouter,
-} from "next/router";
+} from "next/navigation";
 import {
   Fragment,
   MouseEvent,
@@ -23,13 +24,16 @@ import {
   getGoal,
 } from "@/actions";
 import {
-  GetServerSideProps,
-} from "next";
-import {
   useProfile,
 } from "@/utils";
 
-export default function NewGoalPage({ goalId }: PageProps) {
+
+type PageProps = {
+  params: {
+    goalId: number,
+  },
+}
+export default function Page({ params: { goalId } }: PageProps) {
   const profile = useProfile();
   const [subGoals, setSubGoals] = useState<ReactElement[]>([]);
   const router = useRouter();
@@ -127,15 +131,3 @@ export default function NewGoalPage({ goalId }: PageProps) {
     </div>
   );
 }
-
-type PageProps = {
-  goalId: number,
-}
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  const { goal_id } = context.params!;
-  return {
-    props: {
-      goalId: parseInt(goal_id as string, 10),
-    },
-  };
-};

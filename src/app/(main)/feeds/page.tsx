@@ -1,16 +1,15 @@
+"use client";
 import {
   getFeeds,
   toogleLikeFeed,
 } from "@/actions";
 import {
-  BattomNavigationBar,
-} from "@/components/bottom-navigation-bar";
-import {
   categories,
   shareFeed,
   useProfile,
+  useScrollHook,
 } from "@/utils";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -20,7 +19,7 @@ import {
   useState,
 } from "react";
 
-export default function FeedPage() {
+export default function Page() {
   const profile = useProfile();
   const [category, setCategory] = useState("all");
   const onCategoryClick = useCallback((cate: string) => (e: MouseEvent<HTMLButtonElement>) => {
@@ -141,54 +140,6 @@ export default function FeedPage() {
           로딩중...
         </div>
       </div>
-      <BattomNavigationBar />
     </div>
   );
 }
-
-export const getScrollHeight = () => {
-  const scrollHeight = Math.max(
-    document.body.scrollHeight,
-    document.documentElement.scrollHeight,
-    document.body.offsetHeight,
-    document.documentElement.offsetHeight,
-    document.body.clientHeight,
-    document.documentElement.clientHeight,
-  );
-  return scrollHeight;
-}
-
-export const useScrollHook = (callback: () => Promise<void>) => {
-  const [isFetching, setFetching] = useState(false);
-
-  const onScroll = () => {
-    const scrollHeight = getScrollHeight();
-    const currentScroll = Math.ceil(window.innerHeight + document.documentElement.scrollTop);
-    if (scrollHeight === currentScroll && !isFetching) {
-      setFetching(true);
-    }
-  };
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-  useEffect(() => {
-    console.log("SADf")
-    if (isFetching) {
-      callback().then(() => {
-        setTimeout(() => {
-          setFetching(false);
-          const scrollAdjustment = 50;
-          const newScrollTop = document.documentElement.scrollTop - scrollAdjustment;
-          window.scrollTo({
-            top: newScrollTop > 0 ? newScrollTop : 0,
-            behavior: "smooth",
-          });
-        }, 2000);
-      });
-    }
-  }, [isFetching]);
-  return [isFetching, setFetching];
-};

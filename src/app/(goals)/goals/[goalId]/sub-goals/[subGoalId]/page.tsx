@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
 import {
   useRouter,
-} from "next/router";
+} from "next/navigation";
 import React, {
   MouseEvent,
   useCallback,
@@ -24,13 +25,16 @@ import {
   AddGoalFeed,
 } from "@/components/add-goal-feed";
 import {
-  GetServerSideProps,
-} from "next";
-import {
   useProfile,
 } from "@/utils";
 
-export default function SubGoalPage({ goalId, subGoalId }: PageProps) {
+type PageProps = {
+  params: {
+    goalId: number,
+    subGoalId: number,
+  },
+}
+export default function Page({ params: { goalId, subGoalId } }: PageProps) {
   const profile = useProfile();
   const router = useRouter();
   const goBack = useCallback(() => {
@@ -160,19 +164,5 @@ export default function SubGoalPage({ goalId, subGoalId }: PageProps) {
         </>}
       </div>
     </div>
-  )
+  );
 }
-
-type PageProps = {
-  goalId: number,
-  subGoalId: number,
-}
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  const { goal_id, sub_goal_id } = context.params!;
-  return {
-    props: {
-      goalId: parseInt(goal_id as string, 10),
-      subGoalId: parseInt(sub_goal_id as string, 10),
-    },
-  };
-};

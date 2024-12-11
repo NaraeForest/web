@@ -1,17 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
-  useRouter,
-} from "next/router";
+  usePathname,
+} from "next/navigation";
 
 export function BattomNavigationBar() {
-  const router = useRouter();
+  const pathname = usePathname();
   return (
     <div className="fixed bottom-0 w-full safe-area bg-white">
       <div className="h-16 border-t border-[#D9D9D9] flex justify-evenly items-center text-[0.625rem] z-50">
         <Link href={"/"} className="flex flex-col items-center">
           <Image
-            src={router.pathname === "/" ? "/home-full.svg" : "/home-line.svg"}
+            src={pathname === "/" ? "/home-full.svg" : "/home-line.svg"}
             width={24}
             height={24}
             alt="go to home"
@@ -31,7 +33,7 @@ export function BattomNavigationBar() {
           className="flex flex-col items-center"
         >
           <Image
-            src={router.pathname === "/mypage" ? "/user-full.svg" : "/user-line.svg"}
+            src={pathname === "/mypage" ? "/user-full.svg" : "/user-line.svg"}
             width={24}
             height={24}
             alt="go to feeds"

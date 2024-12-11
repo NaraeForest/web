@@ -1,3 +1,5 @@
+"use client";
+
 import {
   getUserProfile,
 } from "@/actions";
@@ -17,20 +19,23 @@ import {
   TabPanel,
   TabPanels,
 } from "@headlessui/react";
-import {
-  GetServerSideProps,
-} from "next";
 import Image from "next/image";
 import {
   useRouter,
-} from "next/router";
+} from "next/navigation";
 import {
   useCallback,
   useEffect,
   useState,
 } from "react";
 
-export default function UserPage({ userId }: PageProps) {
+type PageProps = {
+  params: {
+    userId: number,
+  },
+}
+export default function Page({ params }: PageProps) {
+  const { userId } = params;
   const router = useRouter();
   const goBack = useCallback(() => {
     router.back();
@@ -108,15 +113,3 @@ export default function UserPage({ userId }: PageProps) {
     </div>
   );
 }
-
-type PageProps = {
-  userId: number,
-}
-export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  const { user_id } = context.params!;
-  return {
-    props: {
-      userId: parseInt(user_id as string, 10),
-    },
-  };
-};
