@@ -1,4 +1,8 @@
-import { createPreSignedURL, updateUserProfile, uploadPreSignedURL } from "@/actions";
+import {
+  updateMyProfile,
+  createPreSignedURL,
+  uploadPreSignedURL,
+} from "@/actions";
 import {
   Dialog,
   DialogPanel,
@@ -60,7 +64,7 @@ export function EditProfile(props: EditProfileProps) {
       await uploadPreSignedURL(presignedURL, file);
       headerImageFileURL = key;
     }
-    const { success } = await updateUserProfile(formdata.nickname, formdata.bio, profileImageFileURL, headerImageFileURL);
+    const { success } = await updateMyProfile(formdata.nickname, formdata.bio, profileImageFileURL, headerImageFileURL);
     if (success) {
       setIsOpen(false);
       props.onComplete();

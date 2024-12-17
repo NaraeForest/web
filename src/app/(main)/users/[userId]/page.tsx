@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  getUserProfile,
+  readUserProfile,
 } from "@/actions";
 import {
   BattomNavigationBar,
@@ -43,7 +43,7 @@ export default function Page({ params }: PageProps) {
   const [profile, setProfile] = useState<any>();
   useEffect(() => {
     (async () => {
-      const { data } = await getUserProfile(userId);
+      const { data } = await readUserProfile(userId);
       setProfile(data);
     })();
   }, [userId]);

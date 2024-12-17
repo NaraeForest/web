@@ -1,50 +1,90 @@
-import axios from "@/axios";
+"use server";
 
-export const addGoalFeed = async (subGoalId: number, content: string, image?: string) => {
-  const body = {
-    subGoalId,
-    content,
-    image,
+import {
+  getToken,
+} from "./action";
+
+export const createGoalFeed = async (subGoalId: number, content: string, image?: string) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      subGoalId,
+      content,
+      image,
+    }),
   };
-  const { data } = await axios.post(`/api/v1/feeds`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getFeed = async (feedId: number) => {
-  const { data } = await axios.get(`/api/v1/feeds/${feedId}`);
-  return data;
-};
-
-export const addChildFeed = async (parentId: number, subGoalId: number, content: string, image?: string) => {
-  const body = {
-    subGoalId,
-    content,
-    image,
+export const createChildFeed = async (parentId: number, subGoalId: number, content: string, image?: string) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      subGoalId,
+      content,
+      image,
+    }),
   };
-  const { data } = await axios.post(`/api/v1/feeds/${parentId}`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${parentId}`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getFeeds = async (category: string, startFeedId?: number) => {
+export const readFeeds = async (category: string, startFeedId?: number) => {
   const search = new URLSearchParams();
   search.append("category", category);
   if (startFeedId != null) {
     search.append("startFeedId", startFeedId.toString());
   }
-  const { data } = await axios.get(`/api/v1/feeds?${search.toString()}`);
-  return data;
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "GET",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds?${search.toString()}`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const toogleLikeFeed = async (feedId: number) => {
-  const { data } = await axios.patch(`/api/v1/feeds/${feedId}/likes`);
-  return data;
+export const readFeed = async (feedId: number) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "GET",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${feedId}`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getUserFeeds = async (userId: number, startFeedId?: number) => {
-  const search = new URLSearchParams();
-  if (startFeedId != null) {
-    search.append("startFeedId", startFeedId.toString());
-  }
-  const { data } = await axios.get(`/api/v1/users/${userId}/feeds?${search.toString()}`);
-  return data;
+export const updateFeedLike = async (feedId: number) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "PATCH",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${feedId}/likes`, init);
+  const json = await res.json();
+  return json;
 };

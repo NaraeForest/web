@@ -1,10 +1,6 @@
 "use client";
 import Image from "next/image";
 import {
-  getFeed,
-  toogleLikeFeed,
-} from "@/actions";
-import {
   MouseEvent,
   useCallback,
   useEffect,
@@ -25,6 +21,7 @@ import {
   shareFeed,
   useProfile,
 } from "@/utils";
+import { readFeed, updateFeedLike } from "@/actions";
 
 type PageProps = {
   params: {
@@ -37,7 +34,7 @@ export default function Page({ params: { feedId } }: PageProps) {
   const [feed, setFeed] = useState<any>(null);
   useEffect(() => {
     (async () => {
-      const { success, data } = await getFeed(feedId);
+      const { success, data } = await readFeed(feedId);
       if (success) {
         setFeed(data);
       }
@@ -49,8 +46,8 @@ export default function Page({ params: { feedId } }: PageProps) {
 
   const onFeedLikeClick = (targetFeedId: number) => async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    await toogleLikeFeed(targetFeedId);
-    const { success, data } = await getFeed(feedId);
+    await updateFeedLike(targetFeedId);
+    const { success, data } = await readFeed(feedId);
     if (success) {
       setFeed(data);
     }

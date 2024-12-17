@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  getMyProfile,
-} from "@/actions";
-import {
   BattomNavigationBar,
 } from "@/components/bottom-navigation-bar";
 import {
@@ -27,18 +24,21 @@ import {
 import {
   UserGoalList,
 } from "@/components/user-goal-list";
+import {
+  readMyProfile,
+} from "@/actions";
 
 export default function Page() {
   const [profile, setProfile] = useState<any>(null);
   useEffect(() => {
     (async () => {
-      const { data } = await getMyProfile();
+      const { data } = await readMyProfile();
       setProfile(data);
     })();
   }, []);
   const onCompleteEditProfile = () => {
     (async () => {
-      const { data } = await getMyProfile();
+      const { data } = await readMyProfile();
       setProfile(data);
     })();
   };

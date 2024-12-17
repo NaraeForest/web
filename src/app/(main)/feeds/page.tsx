@@ -1,9 +1,5 @@
 "use client";
 import {
-  getFeeds,
-  toogleLikeFeed,
-} from "@/actions";
-import {
   categories,
   shareFeed,
   useProfile,
@@ -18,6 +14,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { readFeeds, updateFeedLike } from "@/actions";
 
 export default function Page() {
   const profile = useProfile();
@@ -29,18 +26,18 @@ export default function Page() {
   const [feeds, setFeeds] = useState<any[]>([]);
   const [isFetching,] = useScrollHook(async () => {
     const lastItem = feeds[feeds.length - 1].id;
-    const { data } = await getFeeds(category, lastItem);
+    const { data } = await readFeeds(category, lastItem);
     setFeeds([...feeds, ...data]);
   });
   useEffect(() => {
     (async () => {
-      const { data } = await getFeeds(category);
+      const { data } = await readFeeds(category);
       setFeeds([...data]);
     })();
   }, [category]);
   const onFeedLikeClick = (feedId: number) => async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const { data } = await toogleLikeFeed(feedId);
+    const { data } = await updateFeedLike(feedId);
     const idx = feeds.findIndex((feed) => feed.id === feedId);
     if (idx == -1) {
       return;

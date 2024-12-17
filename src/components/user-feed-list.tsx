@@ -2,10 +2,6 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  getUserFeeds,
-  toogleLikeFeed,
-} from "@/actions";
-import {
   shareFeed,
   useScrollHook,
 } from "@/utils";
@@ -14,6 +10,10 @@ import {
   useEffect,
   useState,
 } from "react";
+import {
+  readUserFeeds,
+  updateFeedLike,
+} from "@/actions";
 
 type UserFeedListProps = {
   userId: number,
@@ -22,18 +22,18 @@ export function UserFeedList({ userId }: UserFeedListProps) {
   const [feeds, setFeeds] = useState<any[]>([]);
   const [isFetching,] = useScrollHook(async () => {
     const lastItem = feeds[feeds.length - 1].id;
-    const { data } = await getUserFeeds(userId, lastItem);
+    const { data } = await readUserFeeds(userId, lastItem);
     setFeeds([...feeds, ...data]);
   });
   useEffect(() => {
     (async () => {
-      const { data } = await getUserFeeds(userId);
+      const { data } = await readUserFeeds(userId);
       setFeeds([...data]);
     })();
   }, []);
   const onFeedLikeClick = (feedId: number) => async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const { data } = await toogleLikeFeed(feedId);
+    const { data } = await updateFeedLike(feedId);
     const idx = feeds.findIndex((feed) => feed.id === feedId);
     if (idx == -1) {
       return;

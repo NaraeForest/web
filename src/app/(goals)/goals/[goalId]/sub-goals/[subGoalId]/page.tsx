@@ -16,9 +16,6 @@ import {
   EditSubGoal,
 } from "@/components/edit-sub-goal";
 import {
-  getSubGoal,
-} from "@/actions";
-import {
   Task,
 } from "@/components/task";
 import {
@@ -27,6 +24,7 @@ import {
 import {
   useProfile,
 } from "@/utils";
+import { readSubGoal } from "@/actions";
 
 type PageProps = {
   params: {
@@ -49,21 +47,21 @@ export default function Page({ params: { goalId, subGoalId } }: PageProps) {
   const [tasks, setTasks] = useState<any[]>([]);
   useEffect(() => {
     (async () => {
-      const { data } = await getSubGoal(goalId, subGoalId);
+      const { data } = await readSubGoal(goalId, subGoalId);
       setSubGoal(data);
       setTasks(data.tasks);
     })();
   }, []);
   const reloadSubGoal = useCallback(() => {
     (async () => {
-      const { data } = await getSubGoal(goalId, subGoalId);
+      const { data } = await readSubGoal(goalId, subGoalId);
       setSubGoal(data);
       setTasks(data.tasks);
     })()
   }, []);
   const onSubGoalUpdated = useCallback(() => {
     (async () => {
-      const { data } = await getSubGoal(goalId, subGoalId);
+      const { data } = await readSubGoal(goalId, subGoalId);
       setSubGoal(data);
       setIsSubEdit(false);
       setTasks(data.tasks);

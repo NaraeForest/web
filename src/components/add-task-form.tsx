@@ -4,7 +4,7 @@ import {
   useForm,
 } from "react-hook-form";
 import {
-  addTask,
+  createTask,
 } from "@/actions";
 
 type AddTaskFormProps = {
@@ -18,7 +18,7 @@ type TaskForm = {
 export function AddTaskForm({ goalId, subGoalId, onCreated }: AddTaskFormProps) {
   const { register, handleSubmit, reset, } = useForm<TaskForm>();
   const onSubmit: SubmitHandler<TaskForm> = async (body) => {
-    const { success } = await addTask(goalId, subGoalId, body.name);
+    const { success } = await createTask(goalId, subGoalId, body.name);
     if (success) {
       onCreated();
       reset()

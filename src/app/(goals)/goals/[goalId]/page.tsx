@@ -21,11 +21,9 @@ import {
   SubGoalBlock,
 } from "@/components/sub-goal-block";
 import {
-  getGoal,
-} from "@/actions";
-import {
   useProfile,
 } from "@/utils";
+import { readGoal } from "@/actions";
 
 
 type PageProps = {
@@ -48,7 +46,7 @@ export default function Page({ params: { goalId } }: PageProps) {
   const [goal, setGoal] = useState<any>(null);
   useEffect(() => {
     (async () => {
-      const { data } = await getGoal(goalId);
+      const { data } = await readGoal(goalId);
       setGoal(data);
     })();
   }, [goalId]);
@@ -82,7 +80,7 @@ export default function Page({ params: { goalId } }: PageProps) {
   }, [goal, profile]);
   const onCompleteUpdateGoal = useCallback(() => {
     (async () => {
-      const { data } = await getGoal(goalId);
+      const { data } = await readGoal(goalId);
       setGoal(data);
       setEditGoal(false);
     })();

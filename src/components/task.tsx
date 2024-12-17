@@ -1,5 +1,5 @@
 import {
-  completeTask,
+  updateTaskComplete,
   deleteTask,
 } from "@/actions";
 import Image from "next/image";
@@ -33,7 +33,7 @@ export function Task({ complete, name, goalId, subGoalId, taskId, onComplete, on
     return async (e) => {
       const check = e.target.checked;
       setChecked(check);
-      const { success } = await completeTask(goalId, subGoalId, taskId, check);
+      const { success } = await updateTaskComplete(goalId, subGoalId, taskId, check);
       if (success) {
         onComplete();
       }

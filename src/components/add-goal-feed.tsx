@@ -4,16 +4,16 @@ import {
   useForm,
 } from "react-hook-form";
 import {
-  addChildFeed,
-  addGoalFeed,
-  createPreSignedURL,
-  uploadPreSignedURL,
-} from "@/actions";
-import {
   MouseEvent,
   useEffect,
   useState,
 } from "react";
+import {
+  createChildFeed,
+  createGoalFeed,
+  createPreSignedURL,
+  uploadPreSignedURL,
+} from "@/actions";
 
 type AddGoalFeedForm = {
   content: string,
@@ -54,14 +54,14 @@ export function AddGoalFeed({ parentId, subGoalId, onComplete }: AddGoalFeedProp
       fileUrl = key
     }
     if (parentId != null) {
-      const { data, success } = await addChildFeed(parentId, subGoalId, formdata.content, fileUrl);
+      const { data, success } = await createChildFeed(parentId, subGoalId, formdata.content, fileUrl);
       if (success) {
         onComplete(data.id);
         reset();
       }
       return;
     }
-    const { data, success } = await addGoalFeed(subGoalId, formdata.content, fileUrl);
+    const { data, success } = await createGoalFeed(subGoalId, formdata.content, fileUrl);
     if (success) {
       onComplete(data.id);
     }

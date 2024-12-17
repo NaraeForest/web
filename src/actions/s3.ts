@@ -1,15 +1,13 @@
-import Axios from "axios";
-import axios from "@/axios";
-
-export const createPreSignedURL = async (extension: string) => {
-  const body = {
-    extension,
-  };
-  const { data } = await axios.post(`/api/v1/s3`, body);
-  return data;
-};
+"use client";
 
 export const uploadPreSignedURL = async (url: string, file: File) => {
-  const { status } = await Axios.put(url, file);
-  return status === 200;
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": file.type,
+    },
+    method: "PUT",
+    body: file,
+  };
+  const res = await fetch(url, init);
+  return res.ok
 };

@@ -17,7 +17,7 @@ import {
   useRouter,
 } from "next/navigation";
 import {
-  addSubGoal,
+  createSubGoal,
 } from "@/actions";
 
 type SubGoalForm = {
@@ -37,7 +37,7 @@ export function AddSubGoal({ goalId }: AddSubGoalProps) {
   }, []);
   const { register, handleSubmit } = useForm<SubGoalForm>();
   const onSubmit: SubmitHandler<SubGoalForm> = async (body) => {
-    const { success, data } = await addSubGoal(goalId, body.name);
+    const { success, data } = await createSubGoal(goalId, body.name);
     if (success) {
       router.push(`/goals/${goalId}/sub-goals/${data.id}`);
     }

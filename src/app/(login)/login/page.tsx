@@ -1,6 +1,8 @@
 "use client";
 
-import axios from '@/axios';
+import {
+  readCSRFToken,
+} from '@/actions';
 import Image from 'next/image';
 import React, {
   useEffect,
@@ -11,7 +13,7 @@ export default function Page() {
   const [csrf, setCsrf] = useState<string>();
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`/api/csrf/token`);
+      const { data } = await readCSRFToken();
       if (data.token != null) {
         setCsrf(data.token);
       }
@@ -21,7 +23,6 @@ export default function Page() {
     return (<div />);
   }
   return (
-
     <div className='w-screen h-screen relative'>
       <div className='absolute -translate-y-1/2 top-1/2 -translate-x-1/2 left-1/2 w-full max-w-96'>
         <div className='flex flex-col items-center mx-5 border pt-3'>

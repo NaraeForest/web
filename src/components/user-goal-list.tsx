@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {
-  getUserGoals,
-} from "@/actions";
-import {
   useEffect,
   useState,
 } from "react";
+import {
+  readUserGoals,
+} from "@/actions";
 
 type UserGoalListProps = {
   userId: number,
@@ -14,7 +14,7 @@ export function UserGoalList({ userId }: UserGoalListProps) {
   const [goals, setGoals] = useState<any[]>([]);
   useEffect(() => {
     (async () => {
-      const { data, success } = await getUserGoals(userId);
+      const { data, success } = await readUserGoals(userId);
       if (success) {
         setGoals(data);
       }

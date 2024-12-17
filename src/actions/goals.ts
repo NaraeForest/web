@@ -1,86 +1,187 @@
-import axios from "@/axios";
+"use server";
 
-export const addGoal = async (name: string, category: string) => {
-  const body = {
-    name,
-    category,
+import {
+  getToken,
+} from "./action";
+
+export const createGoal = async (name: string, category: string) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      name,
+      category,
+    }),
   };
-  const { data } = await axios.post(`/api/v1/goals`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getGoals = async () => {
-  const { data } = await axios.get(`/api/v1/goals`);
-  return data;
+export const readGoals = async () => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "GET",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getGoal = async (goalId: number) => {
-  const { data } = await axios.get(`/api/v1/goals/${goalId}`);
-  return data;
+export const readGoal = async (goalId: number) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "GET",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
 export const updateGoal = async (goalId: number, name: string, category: string) => {
-  const body = {
-    name,
-    category,
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "PATCH",
+    body: JSON.stringify({
+      name,
+      category,
+    }),
   };
-  const { data } = await axios.patch(`/api/v1/goals/${goalId}`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
 export const deleteGoal = async (goalId: number) => {
-  const { data } = await axios.delete(`/api/v1/goals/${goalId}`);
-  return data;
-};
-
-export const addSubGoal = async (goalId: number, name: string) => {
-  const body = {
-    name,
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "DELETE",
   };
-  const { data } = await axios.post(`/api/v1/goals/${goalId}/sub-goals`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const getSubGoal = async (goalId: number, subGoalId: number) => {
-  const { data } = await axios.get(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}`);
-  return data;
+export const createSubGoal = async (goalId: number, name: string) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      name,
+    }),
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals`, init);
+  const json = await res.json();
+  return json;
+};
+
+export const readSubGoal = async (goalId: number, subGoalId: number,) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "GET",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
 export const updateSubGoal = async (goalId: number, subGoalId: number, name: string) => {
-  const body = {
-    name,
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "PATCH",
+    body: JSON.stringify({
+      name,
+    }),
   };
-  const { data } = await axios.patch(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
 export const deleteSubGoal = async (goalId: number, subGoalId: number) => {
-  const { data } = await axios.delete(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}`);
-  return data;
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "DELETE",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const addTask = async (goalId: number, subGoalId: number, name: string) => {
-  const body = {
-    name,
+export const createTask = async (goalId: number, subGoalId: number, name: string) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "POST",
+    body: JSON.stringify({
+      name,
+    }),
   };
-  const { data } = await axios.post(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks`, init);
+  const json = await res.json();
+  return json;
 };
 
-export const completeTask = async (goalId: number, subGoalId: number, taskId: number, complete: boolean) => {
-  const body = {
-    complete,
+export const updateTaskComplete = async (goalId: number, subGoalId: number, taskId: number, complete: boolean) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `bearer ${token}`,
+    },
+    method: "PATCH",
+    body: JSON.stringify({
+      complete,
+    }),
   };
-  const { data } = await axios.patch(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks/${taskId}`, body);
-  return data;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks`, init);
+  const json = await res.json();
+  return json;
 };
 
 export const deleteTask = async (goalId: number, subGoalId: number, taskId: number) => {
-  const { data } = await axios.delete(`/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks/${taskId}`);
-  return data;
-};
-
-export const getUserGoals = async (userId: number) => {
-  const { data } = await axios.get(`/api/v1/users/${userId}/goals`);
-  return data;
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "DELETE",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks/${taskId}`, init);
+  const json = await res.json();
+  return json;
 };

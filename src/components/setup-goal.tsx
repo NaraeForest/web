@@ -7,10 +7,8 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import {
-  addGoal,
-} from "@/actions";
 import { categories } from "@/utils";
+import { createGoal } from "@/actions";
 
 type IProps = {
   isOpen: boolean,
@@ -24,7 +22,7 @@ type GoalForm = {
 export function SetupGoalDialog({ isOpen, onClose, onComplete }: IProps) {
   const { handleSubmit, register } = useForm<GoalForm>();
   const onSubmit: SubmitHandler<GoalForm> = async (body) => {
-    const { success, data } = await addGoal(body.name, body.category);
+    const { success, data } = await createGoal(body.name, body.category);
     onClose(true);
     onComplete();
   };

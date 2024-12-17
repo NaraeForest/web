@@ -4,7 +4,7 @@ import {
   useState,
 } from "react";
 import {
-  getMyProfile,
+  readMyProfile,
 } from "./actions";
 
 export const categories = {
@@ -22,7 +22,7 @@ export const useProfile = () => {
   const [profile, setProfile] = useState<any>();
   useEffect(() => {
     (async () => {
-      const { data } = await getMyProfile();
+      const { data } = await readMyProfile();
       setProfile(data);
     })();
   }, []);
