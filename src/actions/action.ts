@@ -37,3 +37,15 @@ export const getToken = async () => {
     return token;
   }
 };
+
+export type FetchData<T> = SuccessData<T> | FailData;
+
+interface SuccessData<T> {
+  success: true;
+  data: T;
+}
+
+interface FailData {
+  success: false;
+  error: string;
+}

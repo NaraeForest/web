@@ -1,8 +1,14 @@
 "use server";
 
 import {
+  FetchData,
   getToken,
 } from "./action";
+
+export type PresignedURL = {
+  url: string,
+  key: string,
+};
 
 export const createPreSignedURL = async (extension: string) => {
   const token = await getToken();
@@ -17,6 +23,6 @@ export const createPreSignedURL = async (extension: string) => {
     }),
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/s3`, init);
-  const json = await res.json();
+  const json: FetchData<PresignedURL> = await res.json();
   return json;
 };

@@ -1,8 +1,19 @@
 "use server";
 
 import {
+  FetchData,
   getToken,
 } from "./action"
+
+export type User = {
+  id: number,
+  nickname: string,
+  profileImage: string,
+  headerImage: string,
+  bio: string,
+  createdAt: string,
+  updatedAt: string,
+}
 
 export const readMyProfile = async () => {
   const token = await getToken();
@@ -13,7 +24,7 @@ export const readMyProfile = async () => {
     method: "GET",
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, init);
-  const json = await res.json();
+  const json: FetchData<User> = await res.json();
   return json;
 };
 
@@ -26,7 +37,7 @@ export const readUserProfile = async (userId: number) => {
     method: "GET",
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/${userId}`, init);
-  const json = await res.json();
+  const json: FetchData<User> = await res.json();
   return json;
 };
 
@@ -76,6 +87,6 @@ export const updateMyProfile = async (nickname: string, bio: string, profileImag
     }),
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, init);
-  const json = await res.json();
+  const json: FetchData<undefined> = await res.json();
   return json;
 };
