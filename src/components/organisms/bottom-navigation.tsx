@@ -11,7 +11,7 @@ import {
 export function BottomNavigation() {
   return (
     <div
-      className="safe-area bg-white border-t border-[#E5E7EB]"
+      className="safe-area bg-white border-t border-[#E5E7EB] w-full fixed z-40 bottom-0"
     >
       <div
         className="flex justify-evenly py-3"
