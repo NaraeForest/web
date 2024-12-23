@@ -1,4 +1,7 @@
 import {
+  CategorySelector,
+} from "@/components/molecules";
+import {
   PageHeader,
 } from "@/components/organisms";
 
@@ -10,6 +13,7 @@ export default function Page() {
       <PageHeader
         title="Feeds"
       />
+      <CategorySelector />
     </div>
   );
 }

@@ -2,7 +2,9 @@ import {
   MouseEvent,
 } from "react";
 
-export const categories = {
+type KeyValue = { [key: string]: string };
+
+export const categories: KeyValue = {
   "Sports": "sports",
   "Language": "language",
   "Reading": "reading",
