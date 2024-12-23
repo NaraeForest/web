@@ -2,31 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 스크롤바를 숨기기 위한 CSS */
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari, Opera */
-}
-
-.scrollbar-hidden {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari, and Opera */
-}
-
 .swiper-pagination {
   position: static !important;
   padding-bottom: 12px;
