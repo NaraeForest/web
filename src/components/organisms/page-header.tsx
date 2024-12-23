@@ -12,7 +12,7 @@ type PageHeaderProps = {
 export function PageHeader({ title, children }: PageHeaderProps) {
   return (
     <div
-      className="flex justify-between items-center mt-16 mb-4"
+      className="flex justify-between items-center pt-16 pb-4"
     >
       <Heading1
         text={title}
