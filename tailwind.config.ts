@@ -11,18 +11,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        naverColor: '#03C75A',
-        kakaoColor: '#FEE500',
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        naver: '#03C75A',
+        kakao: '#FEE500',
       },
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],
       },
     },
   },
-  plugins: [
-    require('tailwind-scrollbar-hide'),
-  ],
 };
+
 export default config;
