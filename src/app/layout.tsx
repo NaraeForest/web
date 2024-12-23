@@ -7,9 +7,6 @@ import {
 import {
   pretendard,
 } from "@/lib/font";
-import {
-  BottomNavigation,
-} from "@/components/organisms";
 import "@/styles/globals.css";
 
 export default function RootLayout({
@@ -20,12 +17,11 @@ export default function RootLayout({
       <head>
         <meta
           name="viewport"
-          content="initial-scale=1, viewport-fit=cover"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </head>
       <body className={`${pretendard.variable} font-pretendard text-[#333333]`}>
         {children}
-        <BottomNavigation />
       </body>
     </html>
   );
