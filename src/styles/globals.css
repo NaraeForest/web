@@ -2,15 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.swiper-pagination {
-  position: static !important;
-  padding-bottom: 12px;
-}
-
-.swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: #333333;
-}
-
 .safe-area {
   height: auto;
   padding-bottom: calc(constant(safe-area-inset-bottom));
