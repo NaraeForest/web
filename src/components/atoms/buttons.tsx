@@ -37,7 +37,7 @@ export function CategoryButton({ text, value }: CategoryButtonProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const targetValue = categories[text] ?? value;
-  const currentValue = decodeURIComponent(searchParams.get("category") || "");
+  const currentValue = decodeURIComponent(searchParams.get("category") || "all");
   const onClick = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("category", encodeURIComponent(targetValue));
