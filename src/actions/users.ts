@@ -4,6 +4,12 @@ import {
   FetchData,
   getToken,
 } from "./action"
+import {
+  Feed,
+} from "./feeds";
+import {
+  Goal,
+} from "./goals";
 
 export type User = {
   id: number,
@@ -25,7 +31,10 @@ export const readMyProfile = async () => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, init);
   const json: FetchData<User> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const readUserProfile = async (userId: number) => {
@@ -38,7 +47,10 @@ export const readUserProfile = async (userId: number) => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/${userId}`, init);
   const json: FetchData<User> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const readUserGoals = async (userId: number) => {
@@ -50,8 +62,11 @@ export const readUserGoals = async (userId: number) => {
     method: "GET",
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/${userId}/goals`, init);
-  const json = await res.json();
-  return json;
+  const json: FetchData<Goal[]> = await res.json();
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const readUserFeeds = async (userId: number, startFeedId?: number) => {
@@ -67,8 +82,11 @@ export const readUserFeeds = async (userId: number, startFeedId?: number) => {
     method: "GET",
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/${userId}/feeds?${search.toString()}`, init);
-  const json = await res.json();
-  return json;
+  const json: FetchData<Feed[]> = await res.json();
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const updateMyProfile = async (nickname: string, bio: string, profileImage?: string, headerImage?: string) => {
@@ -88,5 +106,8 @@ export const updateMyProfile = async (nickname: string, bio: string, profileImag
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`, init);
   const json: FetchData<undefined> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };

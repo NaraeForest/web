@@ -48,7 +48,10 @@ export const createGoalFeed = async (subGoalId: number, content: string, image?:
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds`, init);
   const json: FetchData<Feed> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const createChildFeed = async (parentId: number, subGoalId: number, content: string, image?: string) => {
@@ -67,7 +70,10 @@ export const createChildFeed = async (parentId: number, subGoalId: number, conte
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${parentId}`, init);
   const json: FetchData<Feed> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const readFeeds = async (category: string, startFeedId?: number) => {
@@ -86,7 +92,10 @@ export const readFeeds = async (category: string, startFeedId?: number) => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds?${search.toString()}`, init);
   const json: FetchData<Feed[]> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const readFeed = async (feedId: number) => {
@@ -100,7 +109,10 @@ export const readFeed = async (feedId: number) => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${feedId}`, init);
   const json: FetchData<Feed> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
 
 export const updateFeedLike = async (feedId: number) => {
@@ -114,5 +126,8 @@ export const updateFeedLike = async (feedId: number) => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${feedId}/likes`, init);
   const json: FetchData<FeedLike[]> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };

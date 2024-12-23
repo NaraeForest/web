@@ -24,5 +24,8 @@ export const createPreSignedURL = async (extension: string) => {
   };
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/s3`, init);
   const json: FetchData<PresignedURL> = await res.json();
-  return json;
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
 };
