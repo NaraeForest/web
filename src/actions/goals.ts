@@ -234,7 +234,7 @@ export const updateTaskComplete = async (goalId: number, subGoalId: number, task
       complete,
     }),
   };
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks`, init);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/goals/${goalId}/sub-goals/${subGoalId}/tasks/${taskId}`, init);
   const json: FetchData<undefined> = await res.json();
   if (!json.success) {
     throw new Error("Internal server Error");

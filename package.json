@@ -3,19 +3,25 @@
   "version": "0.1.2",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --experimental-https -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@stackflow/core": "^1.1.0",
+    "@stackflow/plugin-basic-ui": "^1.11.1",
+    "@stackflow/plugin-renderer-basic": "^1.1.13",
+    "@stackflow/react": "^1.4.1",
     "dayjs": "^1.11.13",
     "next": "^15.0.1",
     "react": "^18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "^7.53.2",
-    "swiper": "^11.1.14"
+    "react-intersection-observer": "^9.14.1",
+    "swiper": "^11.1.14",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",

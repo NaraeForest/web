@@ -2,18 +2,22 @@ import {
   MouseEvent,
 } from "react";
 
-type KeyValue = { [key: string]: string };
 
-export const categories: KeyValue = {
-  "Sports": "sports",
-  "Language": "language",
-  "Reading": "reading",
-  "Cooking": "cooking",
-  "Travel": "travel",
-  "Social Activities": "social activities",
-  "Job Search": "job search",
-  "Adaptation": "adaptation",
-};
+type List = {
+  title: string,
+  value: string,
+}
+
+export const categories: List[] = [
+  { title: "Sports", value: "sports" },
+  { title: "Language", value: "language" },
+  { title: "Reading", value: "reading" },
+  { title: "Cooking", value: "cooking" },
+  { title: "Travel", value: "travel" },
+  { title: "Social Activities", value: "social activities" },
+  { title: "Job Search", value: "job search" },
+  { title: "Adaptation", value: "adaptation" },
+];
 
 export const shareFeed = (feedId: number, feedUserNickName: string, feedText: string) => (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();

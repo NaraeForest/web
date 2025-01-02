@@ -1,13 +1,13 @@
 import {
-  Metadata,
-} from "next";
-import {
   Fragment,
   PropsWithChildren,
 } from "react";
 import {
-  BottomNavigation,
-} from "@/components/organisms";
+  Metadata,
+} from "next";
+import {
+  BottomNavigationBar,
+} from "@/components";
 
 export default function RootLayout({
   children,
@@ -15,7 +15,8 @@ export default function RootLayout({
   return (
     <Fragment>
       {children}
-      <BottomNavigation />
+
+      <BottomNavigationBar />
     </Fragment>
   );
 }

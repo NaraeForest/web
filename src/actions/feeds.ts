@@ -131,3 +131,19 @@ export const updateFeedLike = async (feedId: number) => {
   }
   return json.data;
 };
+
+export const deleteFeed = async (feedId: number) => {
+  const token = await getToken();
+  const init: RequestInit = {
+    headers: {
+      "Authorization": `bearer ${token}`,
+    },
+    method: "Delete",
+  };
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/feeds/${feedId}`, init);
+  const json: FetchData<undefined> = await res.json();
+  if (!json.success) {
+    throw new Error("Internal server Error");
+  }
+  return json.data;
+};

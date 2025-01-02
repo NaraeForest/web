@@ -7,6 +7,10 @@
   padding-bottom: env(safe-area-inset-bottom, 20px);
 }
 
+.safe-area-content {
+  margin-bottom: calc(env(safe-area-inset-bottom, 20px) + 62px);
+}
+
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -17,4 +21,12 @@
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
+}
+
+.swiper-pagination {
+  position: static !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #333333 !important;
 }

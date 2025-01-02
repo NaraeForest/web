@@ -3,7 +3,7 @@ import {
 } from "react";
 import {
   Heading1,
-} from "@/components/atoms";
+} from "@/components";
 
 type PageHeaderProps = {
   title: string,
@@ -12,11 +12,11 @@ type PageHeaderProps = {
 export function PageHeader({ title, children }: PageHeaderProps) {
   return (
     <div
-      className="flex justify-between items-center pt-16 pb-4"
+      className="px-5 pt-16 pb-3 flex justify-between items-center"
     >
-      <Heading1
-        text={title}
-      />
+      <Heading1>
+        {title}
+      </Heading1>
       {children}
     </div>
   );

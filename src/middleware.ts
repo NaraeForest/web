@@ -8,8 +8,8 @@ const REFRESH_TOKEN = "refresh-token";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-
   const cookieStore = request.cookies;
+
   const accessToken = cookieStore.get(ACCESS_TOKEN)?.value;
   if (accessToken != null) {
     return response;

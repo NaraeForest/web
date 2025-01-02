@@ -5,6 +5,9 @@ import {
   PropsWithChildren,
 } from "react";
 import {
+  ProfileComponents,
+} from "@/components";
+import {
   pretendard,
 } from "@/lib/font";
 import "@/styles/globals.css";
@@ -22,6 +25,7 @@ export default function RootLayout({
       </head>
       <body className={`${pretendard.variable} font-pretendard text-[#333333]`}>
         {children}
+        <ProfileComponents />
       </body>
     </html>
   );
