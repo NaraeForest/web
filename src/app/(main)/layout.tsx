@@ -1,30 +1,25 @@
-
+import {
+  Fragment,
+  PropsWithChildren,
+} from "react";
 import {
   Metadata,
-} from "next"
+} from "next";
 import {
-  PropsWithChildren,
-} from "react"
-import {
-  BattomNavigationBar,
-} from "@/components/bottom-navigation-bar";
-import "@/styles/globals.css";
-import { pretendard } from "@/lib/font";
-
-export const metadata: Metadata = {
-};
-
+  BottomNavigationBar,
+} from "@/components";
 
 export default function RootLayout({
   children,
 }: PropsWithChildren) {
   return (
-    <html lang="ko">
+    <Fragment>
+      {children}
 
-      <body className={`${pretendard.variable} font-pretendard`}>
-        {children}
-        <BattomNavigationBar />
-      </body>
-    </html>
+      <BottomNavigationBar />
+    </Fragment>
   );
 }
+
+export const metadata: Metadata = {
+};

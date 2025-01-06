@@ -6,10 +6,10 @@ import {
   usePathname,
 } from "next/navigation";
 
-export function BattomNavigationBar() {
+export function BottomNavigationBar() {
   const pathname = usePathname();
   return (
-    <div className="fixed bottom-0 w-full safe-area bg-white">
+    <div className="fixed bottom-0 w-full safe-area bg-white z-40">
       <div className="h-16 border-t border-[#D9D9D9] flex justify-evenly items-center text-[0.625rem] z-50">
         <Link href={"/"} className="flex flex-col items-center">
           <Image

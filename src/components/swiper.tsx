@@ -1,35 +1,42 @@
 "use client";
-import Swiper from "swiper";
-import {
-  Navigation,
-  Pagination,
-} from 'swiper/modules';
+
+import Swiper from 'swiper';
 import {
   PropsWithChildren,
   useEffect,
-} from "react";
+  useRef,
+} from 'react';
+import {
+  Pagination,
+} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
-type SwiperListProps = {
-  className?: string,
-};
-export function SwiperList({ className, children }: PropsWithChildren<SwiperListProps>) {
+export function SwiperGroup({ children }: PropsWithChildren) {
+  const swiperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const swiper = new Swiper(".swiper", {
-      modules: [Navigation, Pagination],
+    if (swiperRef.current == null) {
+      return;
+    }
+    const swiper = new Swiper(swiperRef.current, {
+      modules: [
+        Pagination,
+      ],
       pagination: {
         el: '.swiper-pagination',
       },
     });
     return () => {
+      if (swiperRef.current == null) {
+        return;
+      }
       swiper.destroy();
     };
   }, []);
   return (
     <div
-      className={`swiper ${className}`}
+      className="swiper"
+      ref={swiperRef}
     >
       <div
         className="swiper-wrapper"
@@ -43,13 +50,10 @@ export function SwiperList({ className, children }: PropsWithChildren<SwiperList
   );
 }
 
-type SwiperItemProps = {
-
-};
-export function SwiperItem({ children }: PropsWithChildren<SwiperItemProps>) {
+export function SwiperSlide({ children }: PropsWithChildren) {
   return (
     <div
-      className="swiper-slide"
+      className='swiper-slide'
     >
       {children}
     </div>

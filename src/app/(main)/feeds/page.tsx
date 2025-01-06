@@ -1,141 +1,124 @@
 "use client";
-import {
-  categories,
-  shareFeed,
-  useProfile,
-  useScrollHook,
-} from "@/utils";
-import dayjs from "@/lib/dayjs";
+
 import Image from "next/image";
-import Link from "next/link";
 import {
-  MouseEvent,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import { readFeeds, updateFeedLike } from "@/actions";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import {
+  useInView,
+} from "react-intersection-observer";
+import {
+  Feed,
+  readFeeds,
+} from "@/actions";
+import {
+  BaseBorder,
+  PageHeader,
+} from "@/components";
+import {
+  FeedItem,
+} from "@/components/feeds";
+import {
+  categories,
+} from "@/utils";
 
 export default function Page() {
-  const profile = useProfile();
-  const [category, setCategory] = useState("all");
-  const onCategoryClick = useCallback((cate: string) => (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setCategory(cate);
-  }, []);
-  const [feeds, setFeeds] = useState<any[]>([]);
-  const [isFetching,] = useScrollHook(async () => {
-    const lastItem = feeds[feeds.length - 1].id;
-    const { data } = await readFeeds(category, lastItem);
-    setFeeds([...feeds, ...data]);
-  });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category") || "all";
   useEffect(() => {
-    (async () => {
-      const { data } = await readFeeds(category);
-      setFeeds([...data]);
-    })();
+    setFeeds([]);
+    setHasMore(true);
+    fetchData();
   }, [category]);
-  const onFeedLikeClick = (feedId: number) => async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const { data } = await updateFeedLike(feedId);
-    const idx = feeds.findIndex((feed) => feed.id === feedId);
-    if (idx == -1) {
-      return;
-    }
-    feeds[idx].likes = data;
-    setFeeds([...feeds]);
-  };
-  if (profile == null) {
-    return (<div />);
-  }
-  return (
-    <div>
-      <div className="mx-5 mt-16 mb-3">
-        <div className="flex justify-between items-center">
-          <h1 className="font-medium text-[2rem]">Feeds</h1>
-        </div>
-      </div>
-      <div className="flex gap-2 mx-5 overflow-y-scroll">
 
+  const onCategoryChange = useCallback((target: string) => () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("category", target);
+    router.replace(`?${params.toString()}`);
+    router.refresh();
+  }, []);
+
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isLoading, setLoadig] = useState<boolean>(false);
+  const [feeds, setFeeds] = useState<Feed[]>([]);
+  const { ref, inView } = useInView({ threshold: 1.0 });
+  const fetchData = async () => {
+    setLoadig(true);
+    const latestId = feeds.length > 0 ? feeds[feeds.length - 1].id : undefined;
+    const data = await readFeeds(category, latestId);
+    if (data.length === 0) {
+      setHasMore(false);
+    }
+    setFeeds([...feeds, ...data]);
+    setLoadig(false);
+  };
+  useEffect(() => {
+    if (inView) {
+      fetchData();
+    }
+  }, [inView]);
+  return (
+    <div
+      className="safe-area-content"
+    >
+      <PageHeader
+        title="Feeds"
+      />
+      <div
+        className="flex gap-2 overflow-x-scroll px-5 hide-scroll"
+      >
         <button
-          onClick={onCategoryClick("all")}
-          className={`text-[#333333] text-[0.625rem] leading-[0.625rem] text-center py-[6px] px-2 border rounded-full border-[#E5E7EB] ${category === "all" ? "font-semibold border-black" : ""}`}
+          type="button"
+          className={`border border-solid ${category === "all" ? "border-[#333333]" : "border-[#E5E7EB]"} rounded-full px-2 py-[0.375rem] text-[0.625rem] break-keep whitespace-nowrap`}
+          onClick={onCategoryChange("all")}
         >
           All
         </button>
-        {Object.keys(categories).map((key, i) => {
-          const cate = (categories as { [key: string]: string })[key];
-          return (
-            <button
-              onClick={onCategoryClick(cate)}
-              key={i}
-              className={`text-[#333333] break-keep whitespace-nowrap text-[0.625rem] leading-[0.625rem] text-center py-[6px] px-2 border rounded-full border-[#E5E7EB] ${category === cate ? "font-semibold border-black" : ""}`}
-            >
-              {key}
-            </button>
-          )
-        })}
-      </div>
-      <div className="p-5 flex flex-col gap-5 mb-16">
-        {feeds.map((feed) => (
-          <div
-            key={feed.id}
-            className="border border-[#E5E7EB] rounded-lg p-4"
+        {categories.map(({ title, value }) => (
+          <button
+            key={value}
+            type="button"
+            className={`border border-solid ${category === value ? "border-[#333333]" : "border-[#E5E7EB]"} rounded-full px-2 py-[0.375rem] text-[0.625rem] break-keep whitespace-nowrap`}
+            onClick={onCategoryChange(value)}
           >
-            <div className="flex justify-between items-center">
-              <Link
-                href={`/users/${feed.user.id}`}
-                className="flex gap-3"
-              >
-                <Image src={feed.user.profileImage} alt="" width={40} height={40} className="rounded-full" />
-                <div className="flex flex-col">
-                  <p className="text-[#333333] text-sm">{feed.user.nickname}</p>
-                  <p className="text-[#71717A] text-[0.625rem]">{dayjs(feed.createdAt).fromNow()}</p>
-                </div>
-              </Link>
-              <button>
-                <Image alt="ellipsis vertical" src="/ellipsis-vertical.svg" width={24} height={24} />
-              </button>
-            </div>
-            <Link href={`/feeds/${feed.id}`} className="pl-[3.25rem] text-xs text-[#333333] whitespace-pre-wrap">
-              {feed.content}
-            </Link>
-            {feed.image != null && <img
-              className="my-4 rounded w-full"
-              src={`${feed.image}`}
-              alt=""
-            />}
-            <div className="flex justify-evenly text-[0.625rem] text-[#333333] mt-3">
-              <button
-                className="flex items-center gap-2"
-                onClick={onFeedLikeClick(feed.id)}
-              >
-                <Image
-                  alt="heart full"
-                  src={feed.likes.findIndex((val: any) => val.user.id === profile.id)
-                    ? "/heart-line.svg"
-                    : "/heart-full.svg"}
-                  width={16}
-                  height={16}
-                />
-                {feed.likes.length} Likes
-              </button>
-              <Link href={`/feeds/${feed.id}`} className="flex items-center gap-2">
-                <Image alt="chat buble" src={"/chat-bubble.svg"} width={16} height={16} />
-                {feed.childs.length} Comments
-              </Link>
-              <button
-                onClick={shareFeed(feed.id, feed.user.nickname, feed.content)}
-                className="flex items-center gap-2">
-                <Image alt="arrow up tray" src={"/arrow-up-tray.svg"} width={16} height={16} />
-                Share
-              </button>
-            </div>
-          </div>
+            {title}
+          </button>
         ))}
-        <div className={`${isFetching ? 'visibility' : 'invisible'}`}>
-          로딩중...
-        </div>
+      </div>
+      <div
+        className="flex flex-col gap-5 p-5"
+      >
+        {feeds.map((feed) => (
+          <BaseBorder
+            key={feed.id}
+          >
+            <FeedItem
+              feed={feed}
+            />
+          </BaseBorder>
+        ))}
+        {isLoading && <div
+          className="flex justify-center items-center py-2"
+        >
+          <Image
+            alt="loading"
+            width={0}
+            height={0}
+            src={"loading.svg"}
+            className="animate-spin w-8 h-8"
+          />
+        </div>}
+        {hasMore && <div
+          ref={ref}
+          style={{ height: "1px" }}
+        />}
       </div>
     </div>
   );
