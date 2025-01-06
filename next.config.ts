@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.05-project.narumir.io',
+        hostname: 'cdn.narumir.io',
         port: '',
         pathname: '/**',
       },

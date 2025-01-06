@@ -21,7 +21,9 @@ import {
 import {
   FeedUserAttribution,
 } from "./feed-user-attribution";
-import { FeedOptions } from "./feed-options";
+import {
+  FeedOptions,
+} from "./feed-options";
 
 type FeedItemProps = {
   feed: Feed,
@@ -55,10 +57,10 @@ export function FeedItem({ feed, isParent = false }: FeedItemProps) {
       </Link>
       {feed.image != null && <Image
         alt="feed content image"
-        width={0}
+        width={512}
         height={0}
         src={feed.image}
-        className="block rounded-lg"
+        className="block rounded-lg w-full h-auto"
       />}
       <div
         className="flex justify-evenly items-center text-[0.625rem] pt-4"

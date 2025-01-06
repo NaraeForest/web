@@ -74,8 +74,8 @@ export function FeedForm({ subGoalId, parentFeedId }: FeedFormProps) {
     }));
 
     const feed = parentFeedId != null
-      ? await createChildFeed(parentFeedId, subGoalId, data.content)
-      : await createGoalFeed(subGoalId, data.content);
+      ? await createChildFeed(parentFeedId, subGoalId, data.content, uploads.pop())
+      : await createGoalFeed(subGoalId, data.content, uploads.pop());
     router.push(`/feeds/${feed.id}`);
     reset();
   };
